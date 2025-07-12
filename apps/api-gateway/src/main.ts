@@ -23,18 +23,21 @@ app.use(cors(
     credentials: true,
   }
 ));
-app.use(morgan('dev'));
-app.use(cookieParser());
-app.use(express.json({limit: '50mb'}));
-app.use(express.urlencoded({ limit: '50mb', extended: true }));
-app.use(rateLimit({
+
+const rateLimiter =rateLimit({
   windowMs: 15 * 60 * 1000, // 15 minutes
-  max: 100, // limit each IP to 100 requests per windowMs
+  max: (req:any)=>(req.user ?1000 :100), // limit each IP to 100 requests per windowMs
   message: 'Too many requests from this IP, please try again after 15 minutes',
   standardHeaders: true, // return rate limit info in the `RateLimit-*` headers
   legacyHeaders: true, // Disable the `X-RateLimit-*` headers
   keyGenerator: (req: any) => req.ip,
-}));
+})
+ 
+app.use(morgan('dev'));
+app.use(cookieParser());
+app.use(express.json({limit: '50mb'}));
+app.use(express.urlencoded({ limit: '50mb', extended: true }));
+app.use(rateLimiter);
 app.set('trust proxy', 1);
 
 
