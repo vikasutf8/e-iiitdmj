@@ -85,3 +85,9 @@ And join the Nx community:
 
 ### Technologies used and its inner modules
  -npm i crypto. || now its in-built
+
+
+
+ ### REFERENCES of DEBUGGING
+ -Prisma Client
+~ https://chatgpt.com/share/687931da-01ac-8001-90b3-6da6f9685ae8 ~
