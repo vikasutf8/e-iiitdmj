@@ -10,7 +10,7 @@ export class AppError extends Error {
         this.statusCode = statusCode;
         this.isOperational = isOperational;
         this.details = details;
-        Error.captureStackTrace(this);
+        Error.captureStackTrace(this, this.constructor);
     }
 
 

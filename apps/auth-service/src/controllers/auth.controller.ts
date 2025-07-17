@@ -6,10 +6,12 @@ import { ValidationError } from '../../../../packages/error-handler';
 //Register a new user
 
 export const  userRegistration = async (req:Request,res:Response,next:NextFunction)=>{
+    
    try {
      validateRegistrationData(req.body,'user');
     const {email,name} = req.body;
-
+    console.log("PRISMA DATABASE URI",process.env.DATABASE_URI);
+console.log(prisma.users);
     const existingUser = await prisma.users.findUnique({
         where:{
             email,

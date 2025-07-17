@@ -19,7 +19,7 @@ export const validateRegistrationData = async (
     !name ||
     (userType === 'seller' && !phone_number && !country)
   ) {
-    throw new ValidationError('Missing required fields');
+    throw new ValidationError('Missing required fields ');
   }
   // email validation
   if (!emailRegex.test(email)) {
