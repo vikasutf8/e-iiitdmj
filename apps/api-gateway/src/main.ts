@@ -11,8 +11,7 @@ import rateLimit from 'express-rate-limit';
 import porxy from 'express-http-proxy';
 import morgan from 'morgan';
 import cookieParser from 'cookie-parser';
-import swagger from 'swagger-ui-express';
-import axios from 'axios';
+
 
 
 const app = express();

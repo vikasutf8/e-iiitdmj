@@ -1,7 +1,11 @@
+
 {
   "name": "@e-shop/auth-service",
   "version": "0.0.1",
   "private": true,
+  "scripts": {
+    "dev":"node src/main.ts"
+  },
   "nx": {
     "targets": {
       "build": {
