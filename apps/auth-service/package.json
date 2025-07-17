@@ -4,7 +4,7 @@
   "version": "0.0.1",
   "private": true,
   "scripts": {
-    "dev":"node src/main.ts"
+    "dev": "ts-node apps/auth-service/src/main.ts"
   },
   "nx": {
     "targets": {
@@ -24,7 +24,18 @@
           "main": "apps/auth-service/src/main.ts",
           "tsConfig": "apps/auth-service/tsconfig.app.json",
           "assets": [
-            "apps/auth-service/src/assets"
+            "apps/auth-service/src/assets",
+{
+    "input": "apps/auth-service/src",
+    "glob": "swagger-output.json",
+    "output": "apps/auth-service/src"
+  },
+  {
+    "input": "apps/auth-service/src",
+    "glob": "swagger.js",
+    "output": "apps/auth-service/src"
+  }
+
           ],
           "esbuildOptions": {
             "sourcemap": true,

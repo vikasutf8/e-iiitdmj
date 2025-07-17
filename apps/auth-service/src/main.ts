@@ -4,8 +4,14 @@ import { errorMiddleware } from "../../../packages/error-handler/error-middlewar
 import cookieParser from 'cookie-parser';
 import router from './routes/auth.router';
 import  SwaggerUi from 'swagger-ui-express';
-const swaggerDocument = require('../swagger-output.json');
+// const swaggerDocument = require('./swagger-output.json');
+import path from 'path';
+import fs from 'fs';
+// const swaggerPath = path.resolve(__dirname, '../../../src/swagger-output.json');
 
+const swaggerPath = path.resolve(__dirname, './swagger-output.json');
+const swaggerDocument = JSON.parse(fs.readFileSync(swaggerPath, 'utf-8'));
+// console.log(path.resolve(__dirname));
 
 const app = express();
 
