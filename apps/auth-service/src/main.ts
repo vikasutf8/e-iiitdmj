@@ -26,7 +26,7 @@ app.get('/', (req, res) => {
 });
 
 app.use("/api-docs",SwaggerUi.serve,SwaggerUi.setup(swaggerDocument));
-app.get("/docs-json",(req,res)=>{
+app.get("/docs-json",(req,res,next)=>{
   res.json(swaggerDocument);
 })
 // Routes

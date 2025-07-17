@@ -24,7 +24,7 @@ export const  userRegistration = async (req:Request,res:Response,next:NextFuncti
 
     await checkOtpRestrictions(email,next)
     await trackOtpRequest(email,next)
-    await sentOtp(email,name,"user-activation-mail")
+    await sentOtp(name,email,"user-activation-mail")
 
 
    res.status(200).json({
