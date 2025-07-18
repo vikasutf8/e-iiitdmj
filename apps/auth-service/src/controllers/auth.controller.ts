@@ -1,9 +1,11 @@
 import { Request, Response, NextFunction } from 'express';
 import {
   checkOtpRestrictions,
+  handleForgotPassword,
   sentOtp,
   trackOtpRequest,
   validateRegistrationData,
+  verifyforgetPasswordOtp,
   verifyOtp,
 } from '../utils/auth.helper';
 import prisma from '../../../../packages/libs/prisma';
@@ -14,6 +16,7 @@ import {
 import bcrypt from 'bcryptjs';
 import jwt from 'jsonwebtoken';
 import { setCookies } from '../utils/cookies/setCookies';
+import exp from 'constants';
 
 //Register a new user
 
@@ -163,3 +166,71 @@ export const loginUser = async (
     return next(error);
   }
 };
+
+//forgot password
+export const forgotPassword = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+)=>{
+    await handleForgotPassword(req,res,next,"user");
+}
+
+//verify forget password OTP
+export const verifyUserForgotPassword = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
+    await verifyforgetPasswordOtp(req,res,next);
+}
+
+
+
+//reset password
+export const resetUserPassword = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+)=>{
+    const {email,newPassword} = req.body;
+    if(!email || !newPassword){
+        return next(new ValidationError("Please provide all the required fields"));
+    }
+    //find user in db
+
+    const user = await prisma.users.findUnique({
+      where: {
+        email,
+      },
+    });
+
+    if(!user){
+        return next(new ValidationError("User not found"));
+    }
+
+    //compare password
+    const isSamePassword = await bcrypt.compare(newPassword,user.password);
+    if(isSamePassword){
+        return next(new ValidationError("New password is same as old password"));
+    }
+
+    //hash new password
+    const hashPassword = await bcrypt.hash(newPassword,10);
+
+    //update password
+    await prisma.users.update({
+        where:{
+            id:user.id,
+        },
+        data:{
+            password:hashPassword,
+        }
+    })
+
+    res.status(200).json({
+        status:"success",
+        success:true,
+        message:"Password Reset Successfully"
+    })
+}
