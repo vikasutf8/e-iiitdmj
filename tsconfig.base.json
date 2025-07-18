@@ -19,10 +19,7 @@
     "target": "es2022",
     "customConditions": ["development"],
     "paths": {
-      "@packages/*":[
-        "packages/*"
-      ],
-    
+      "@packages/*": ["packages/*"]
     }
   }
 }
