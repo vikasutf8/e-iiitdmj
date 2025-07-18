@@ -93,3 +93,6 @@ export const verifyOtp = async (email:string,otp:string,next :NextFunction)=>{
 
   await redis.del(`otp:${email}`,failedAttemptsKey);
 }
+
+
+
