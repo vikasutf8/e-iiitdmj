@@ -91,3 +91,8 @@ And join the Nx community:
  ### REFERENCES of DEBUGGING
  -Prisma Client
 ~ https://chatgpt.com/share/687931da-01ac-8001-90b3-6da6f9685ae8 ~
+
+
+- Swagger
+  "basePath": "/api",
+   "/api/user-registration": 

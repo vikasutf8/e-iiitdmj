@@ -5,7 +5,7 @@ generator client {
 
 datasource db {
   provider = "mongodb"
-  url      = env("DATABASE_URI")   
+  url      = env("DATABASE_URI")
 }
 
 model images {
@@ -25,5 +25,4 @@ model users {
   following String[]
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
-  imagesId String @db.ObjectId
 }
