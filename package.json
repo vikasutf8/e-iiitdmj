@@ -5,10 +5,11 @@
   "scripts": {
     "start": "npx nx run-many --target=serve --all",
     "auth-docs": "node apps/auth-service/src/swagger.js",
-    "user-ui":"npx nx run-many --target=dev --all --projects=user-ui"
+    "user-ui": "npx nx run-many --target=dev --all --projects=user-ui"
   },
   "private": true,
   "dependencies": {
+    "@next/font": "^14.2.15",
     "@prisma/client": "^6.11.1",
     "axios": "^1.10.0",
     "bcryptjs": "^3.0.2",
@@ -23,6 +24,7 @@
     "express-rate-limit": "^7.5.1",
     "ioredis": "^5.6.1",
     "jsonwebtoken": "^9.0.2",
+    "lucide-react": "^0.525.0",
     "morgan": "^1.10.0",
     "next": "~15.2.4",
     "nodemailer": "^7.0.5",
