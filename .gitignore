@@ -51,3 +51,6 @@ test-output
 # Next.js
 .next
 out
+/generated/prisma
+
+/generated/prisma

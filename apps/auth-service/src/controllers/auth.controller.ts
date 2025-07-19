@@ -16,7 +16,7 @@ import {
 import bcrypt from 'bcryptjs';
 import jwt from 'jsonwebtoken';
 import { setCookies } from '../utils/cookies/setCookies';
-import exp from 'constants';
+
 
 //Register a new user
 
@@ -28,8 +28,7 @@ export const userRegistration = async (
   try {
     validateRegistrationData(req.body, 'user');
     const { email, name } = req.body;
-    console.log('PRISMA DATABASE URI', process.env.DATABASE_URI);
-    console.log(prisma.users);
+
     const existingUser = await prisma.users.findUnique({
       where: {
         email,
@@ -51,7 +50,6 @@ export const userRegistration = async (
       message: 'Otp sent successfully | Verify your account',
     });
   } catch (error) {
-    console.log('user registration error', error);
     return next(error);
   }
 };
@@ -131,7 +129,7 @@ export const loginUser = async (
     }
 
     //verify password
-    const isPasswordValid = await bcrypt.compare(password, user.password);
+    const isPasswordValid = await bcrypt.compare(password, user.password!);
     if (!isPasswordValid) {
       return next(new AuthenticationError('Invalid password'));
     }
@@ -210,7 +208,7 @@ export const resetUserPassword = async (
     }
 
     //compare password
-    const isSamePassword = await bcrypt.compare(newPassword,user.password);
+    const isSamePassword = await bcrypt.compare(newPassword,user.password!);
     if(isSamePassword){
         return next(new ValidationError("New password is same as old password"));
     }
