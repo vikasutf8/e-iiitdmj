@@ -1,9 +1,6 @@
-import React from 'react'
-
-const Page = () => {
+export default function Index() {
   return (
-    <div>Page</div>
-  )
+    <>
+    </>
+  );
 }
-
-export default Page
