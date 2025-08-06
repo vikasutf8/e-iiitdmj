@@ -29,7 +29,7 @@ const HeaderBottom = () => {
         };
     }, [isSticky]);
     return (
-        <div className={`w-full h-[65px] transition-all duration-500 ${isSticky ? 'fixed top-0 left-0 z-100 bg-white shadow-lg' : 'relative'}`}>
+        <div className={`w-full h-[65px]  transition-all duration-500 ${isSticky ? 'fixed top-0 left-0 z-100 bg-white shadow-lg' : 'relative'}`}>
             <div className={`w-[80%] relative m-auto flex justify-between items-center ${isSticky ? 'pt-3' : 'py-0'}`}>
                 {/* all dropdowns */}
                 <div className={`w-[260px] ${isSticky && '-mb-2'} cursor-pointer flex items-center justify-between px-5 h-[50px] bg-[#3489FF] `}
