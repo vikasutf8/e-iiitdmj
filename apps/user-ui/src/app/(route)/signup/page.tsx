@@ -1,9 +1,10 @@
 'use client'
 
-import React, { useState } from 'react'
+import React, { useRef, useState } from 'react'
 import {
     QueryClient,
     QueryClientProvider,
+    useMutation,
     useQuery,
 } from '@tanstack/react-query'
 
@@ -12,7 +13,7 @@ import { useRouter } from 'next/navigation'
 import Link from 'next/link'
 import GoogleIcon from 'apps/user-ui/src/shared/components/google-icon/index.tsx'
 import { Eye, EyeOff } from 'lucide-react'
-
+import axios ,{AxiosError} from 'axios'
 
 type FormData = {
     email: string ,
@@ -22,15 +23,82 @@ type FormData = {
 const SignUp = () => {
     const [passwordVisible, setPasswordVisible] = useState(false);
     const [serverError, setServerError] = useState<string | null>(null);
-
+    const [canResend, setCanResend] = useState(true);
+    const [showOtp, setShowOtp] = useState(false);
+    const [timer, setTimer] = useState(60);
+    const [otp,setOtp] = useState(["","","",""]);
+    const [userData, setUserData] = useState<FormData | null>(null);
+    const inputRef = useRef<( HTMLInputElement | null )[]>([]);
 
     const router = useRouter();
 
-
     const { register, handleSubmit, formState: { errors } } = useForm<FormData>();
 
+    const startResendTimer = ()=>{
+        const interval = setInterval(()=>{
+            setTimer(timer=>{
+                if(timer<=1){
+                    clearInterval(interval);
+                    setCanResend(true);
+                    return 0;
+                }
+                return timer-1;
+            })
+        },1000);
+    }
+
+    // tanStack
+    const signupMutation = useMutation({
+        mutationFn: async (data: FormData) => {
+            const response = await axios.post(`${process.env.NEXT_PUBLIC_SERVER_URI}/api/v1/user-registration`, data);
+            return response.data;
+        },
+        onSuccess: (_,formData) => {
+           setUserData(formData);
+           setShowOtp(true);
+           setCanResend(false);
+           setTimer(60);
+           startResendTimer();
+        },
+    });
+
     const onSubmit = async (data: FormData) => {
-return 0;
+        // console.log(data);
+        signupMutation.mutate(data);
+
+    }
+
+
+    // OTP form handler
+
+    const handleOtpChange = (index:number,value:string)=>{
+        // regex for only numbers
+        if(!/^[0-9]?$/.test(value)){
+            return;
+        }
+        const newOtp = [...otp];
+        newOtp[index] = value;
+        setOtp(newOtp);
+        // focus change handler
+        if(value && index < inputRef.current.length - 1){
+            inputRef.current[index + 1]?.focus();
+        }
+    }
+
+    const handleOtpKeyDown = (index:number,e:React.KeyboardEvent<HTMLInputElement>)=>{
+        if(e.key === "Backspace" && !otp[index]  && index>0){
+            inputRef.current[index - 1]?.focus();
+        }
+
+    }
+
+    const resendOtp = ()=>{
+        setCanResend(false);
+        setTimer(60);
+        setTimeout(()=>{
+            setCanResend(true);
+            setTimer(60);
+        },1000);
     }
 
     return (
@@ -55,7 +123,10 @@ return 0;
                     </div>
 
 
-                    <form onSubmit={handleSubmit(onSubmit)}>
+                   
+                    {
+                        !showOtp ? (
+                         <form onSubmit={handleSubmit(onSubmit)}>
 
                         <label className='block text-sm font-medium text-gray-700'>Name</label>
                         <input type="text" className='w-full p-2 border border-gray-300 !rounded outline-0' 
@@ -132,6 +203,53 @@ return 0;
                         </button>
                         {serverError && <p className='text-red-500 text-sm'>{serverError}</p>}
                     </form>
+                    ) : (
+                        <div>
+                            <h3 className='text-xl font-bold text-center mb-4'>Enter OTP</h3>
+                            <div className='flex justify-center gap-6'>
+                                {
+                                    otp?.map((item,index)=>{
+                                        return <input 
+                                        type="text" 
+                                        key={index} 
+                                        className='w-12 h-12 text-center border border-gray-300 outline-none !rounded' 
+                                        // automatic moved to next otp box --that why its important
+                                        ref={
+                                            (ele)=>{
+                                                if(ele){
+                                                    inputRef.current[index] = ele;
+                                                }
+                                            }
+                                        }
+                                        maxLength={1}
+                                        value={item}
+                                        
+                                        onChange={(e)=>handleOtpChange(index,e.target.value)}
+                                        onKeyDown={(e)=>handleOtpKeyDown(index,e)}
+                                        />
+                                    })
+                                }
+                            </div>
+                            <button
+                            type="submit"
+                            className='mt-4 w-full text-xl font-bold cursor-pointer bg-[#000000d6] active:bg-black text-white py-2 rounded-lg'>
+                                Verify OTP
+                            </button>
+                            <p className='text-center text-sm mt-4'>
+                                {
+                                    canResend ? 
+                                  <button
+                                  onClick={resendOtp}
+                                  className='text-blue-400 cursor-pointer'
+                                  >Resend OTP</button>
+                                    :
+                                    `Resend OTP in ${timer} seconds`
+                                }
+                            </p>
+                        </div>
+                    )
+                    }
+                   
                 </div>
             </div>
         </div>
