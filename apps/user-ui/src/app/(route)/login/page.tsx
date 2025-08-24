@@ -4,6 +4,7 @@ import React, { useState } from 'react'
 import {
     QueryClient,
     QueryClientProvider,
+    useMutation,
     useQuery,
 } from '@tanstack/react-query'
 
@@ -13,7 +14,7 @@ import Link from 'next/link'
 // eslint-disable-next-line @nx/enforce-module-boundaries
 import GoogleIcon from 'apps/user-ui/src/shared/components/google-icon'
 import { Eye, EyeOff } from 'lucide-react'
-
+import axios,{AxiosError} from 'axios'
 
 type FormData = {
     email: string ,
@@ -29,8 +30,25 @@ const Login = () => {
 
     const { register, handleSubmit, formState: { errors } } = useForm<FormData>();
 
+    const loginMutation = useMutation({
+        mutationFn: async (data: FormData) => {
+            const response = await axios.post(`${process.env.NEXT_PUBLIC_SERVER_URI}/api/v1/login-user`, data,{
+                withCredentials: true,
+            });
+            return response.data;
+        },
+        onSuccess: (data:FormData) => {
+           setServerError(null);
+          router.push("/dashboard");
+        },
+        onError: (error: AxiosError) => {
+            const errorMessage = (error.response?.data as {message?:string}).message || error.message ||"Invalid Credentials";
+            setServerError(errorMessage);
+        },
+    });
+
     const onSubmit = async (data: FormData) => {
-return 0;
+            loginMutation.mutate(data);
     }
 
     return (
@@ -119,8 +137,9 @@ return 0;
 
                         <button
                         type="submit"
+                        disabled={loginMutation.isPending}
                         className='w-full text-xl font-bold cursor-pointer bg-[#000000d6] active:bg-black text-white py-2 rounded-lg'>
-                            Login
+                            {loginMutation.isPending ? "Logging..." : "Login"}
                         </button>
                         {serverError && <p className='text-red-500 text-sm'>{serverError}</p>}
                     </form>

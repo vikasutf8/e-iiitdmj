@@ -100,3 +100,23 @@ And join the Nx community:
   
 ### user-ui
 - tanstack and react-query ::
+
+
+
+# Some of the important things to note about the project
+- as is using just  userData it move like this:
+```bash
+{
+ name: string;
+  email: string;  
+  password: string;
+}
+```
+- {...userData} is used to pass the data to the verifyOtpMutation
+```bash
+
+ name: string;
+  email: string;  
+  password: string;
+
+```
