@@ -16,12 +16,13 @@ import { Eye, EyeOff } from 'lucide-react'
 
 type FormData = {
     email: string ,
-    password: string
+    password: string,
+    name: string
 }
-const Login = () => {
+const SignUp = () => {
     const [passwordVisible, setPasswordVisible] = useState(false);
     const [serverError, setServerError] = useState<string | null>(null);
-    const [remeberMe, setRemeberMe] = useState(false);
+
 
     const router = useRouter();
 
@@ -35,16 +36,16 @@ return 0;
     return (
         <div className='w-full min-h-[85vh] py-10 bg-[#f1f1f1]'>
 
-            <h1 className='text-4xl font-poppins font-semibold text-black text-center'>Login</h1>
-            <p className='text-lg text-center font-medium py-3 text-[#00000080]'>Login to your account</p>
+            <h1 className='text-4xl font-poppins font-semibold text-black text-center'>SignUp</h1>
+            <p className='text-lg text-center font-medium py-3 text-[#00000080]'>SignUp to your account</p>
             <div className='w-full flex items-center justify-center'>
                 <div className='md:w-[480px] bg-white shadow-md rounded-lg border-2 border-gray-300 px-10 py-5 m-5'>
                     <h3 className='text-3xl font-semibold text-center mb-3  '>
-                        Login to Eshop
+                        SignUp to Eshop
                     </h3>
                     <p className='text-center text-gray-500 mb-5'>
-                        Dont have an account?{" "}
-                        <Link href={"/signup"} className='text-blue-400'>Sign Up</Link>
+                        Already have an account?{" "}
+                        <Link href={"/login"} className='text-blue-400'>Login</Link>
                     </p>
                     <GoogleIcon />
                     <div className='flex  items-center my-5 text-gray-400 text-sm'>
@@ -55,6 +56,24 @@ return 0;
 
 
                     <form onSubmit={handleSubmit(onSubmit)}>
+
+                        <label className='block text-sm font-medium text-gray-700'>Name</label>
+                        <input type="text" className='w-full p-2 border border-gray-300 !rounded outline-0' 
+                        placeholder="someone"
+                        {...register('name',{
+                            required: 'Name is required',
+                           
+                        }
+                        )} 
+                        />
+                       {
+                        errors.name &&
+                         <p className='text-red-500 text-sm'>
+                            {String(errors.name?.message)}
+                            </p>
+                       }
+
+
                         <label className='block text-sm font-medium text-gray-700'>Email</label>
                         <input type="email" className='w-full p-2 border border-gray-300 !rounded outline-0' 
                         placeholder="someone@example.com"
@@ -104,22 +123,12 @@ return 0;
 
                        
                        </div>
-                        <div className='flex justify-between items-center  my-4'>
-                            <label htmlFor="rememberMe">
-                                <input type='checkbox'
-                                 className='text-md'
-                                 checked={remeberMe} 
-                                 onChange={() => setRemeberMe(!remeberMe)}
-                                />
-                                <span className='ml-2 text-md'>Remember me</span>
-                            </label>
-                            <Link href={"/forgot-password"} className='text-blue-400 text-md active:underline active:text-blue-300'>Forgot password?</Link>
-                        </div>
+                        
 
                         <button
                         type="submit"
-                        className='w-full text-xl font-bold cursor-pointer bg-[#000000d6] active:bg-black text-white py-2 rounded-lg'>
-                            Login
+                        className='mt-4 w-full text-xl font-bold cursor-pointer bg-[#000000d6] active:bg-black text-white py-2 rounded-lg'>
+                            SignUp
                         </button>
                         {serverError && <p className='text-red-500 text-sm'>{serverError}</p>}
                     </form>
@@ -129,4 +138,4 @@ return 0;
     )
 }
 
-export default Login
+export default SignUp
