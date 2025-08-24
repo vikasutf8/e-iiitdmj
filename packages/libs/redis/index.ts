@@ -12,6 +12,7 @@ import Redis from "ioredis";
 // console.log("REDIS DATEBASE URI",process.env.REDIS_DATEBASE_URI);
 
 
+console.log("REDIS DATEBASE URI",process.env.REDIS_DATEBASE_URI);
 const redis = new Redis(process.env.REDIS_DATEBASE_URI!);
 
 

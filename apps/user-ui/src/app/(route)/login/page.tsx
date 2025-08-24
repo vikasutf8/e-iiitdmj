@@ -10,7 +10,8 @@ import {
 import { useForm } from 'react-hook-form'
 import { useRouter } from 'next/navigation'
 import Link from 'next/link'
-import GoogleIcon from 'apps/user-ui/src/shared/components/google-icon/index.tsx'
+// eslint-disable-next-line @nx/enforce-module-boundaries
+import GoogleIcon from 'apps/user-ui/src/shared/components/google-icon'
 import { Eye, EyeOff } from 'lucide-react'
 
 
