@@ -52,8 +52,8 @@ const SignUp = () => {
     const signupMutation = useMutation({
         mutationFn: async (data: FormData) => {
             const response = await axios.post(`${process.env.NEXT_PUBLIC_SERVER_URI}/api/v1/user-registration`, data);
-            // return response.data;
-            return true;
+            return response.data;
+            // return true;
         
             
         },
@@ -111,12 +111,8 @@ const SignUp = () => {
     }
 
     const resendOtp = ()=>{
-        setCanResend(false);
-        setTimer(60);
-        setTimeout(()=>{
-            setCanResend(true);
-            setTimer(60);
-        },1000);
+        if(!userData){return;}
+       signupMutation.mutate(userData);
     }
 
     return (
