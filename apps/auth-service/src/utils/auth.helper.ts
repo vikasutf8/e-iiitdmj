@@ -1,3 +1,5 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
+/* eslint-disable @nx/enforce-module-boundaries */
 import crypto from 'crypto';
 import { ValidationError } from '../../../../packages/error-handler';
 import { NextFunction, Request, Response } from 'express';
@@ -49,7 +51,7 @@ export const checkOtpRestrictions = async (email:string,next:NextFunction)=>{
 
 export const trackOtpRequest = async (email:string,next:NextFunction)=>{
     const otpRequestkey = `otp_request_count:${email}`;
-    let otpRequests =parseInt((await redis.get(otpRequestkey)) || "0")
+    const otpRequests =parseInt((await redis.get(otpRequestkey)) || "0")
 
 
     if(otpRequests>=2){

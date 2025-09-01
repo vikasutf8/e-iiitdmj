@@ -1,3 +1,4 @@
+/* eslint-disable @nx/enforce-module-boundaries */
 import { Request, Response, NextFunction } from 'express';
 import {
   checkOtpRestrictions,
@@ -14,9 +15,8 @@ import {
   ValidationError,
 } from '../../../../packages/error-handler';
 import bcrypt from 'bcryptjs';
-import jwt from 'jsonwebtoken';
+import jwt, { JsonWebTokenError } from 'jsonwebtoken';
 import { setCookies } from '../utils/cookies/setCookies';
-
 
 //Register a new user
 
@@ -150,15 +150,14 @@ export const loginUser = async (
     );
 
     //store refresh token and access token in httpOnly cookie
-    setCookies(res,"refreshToken",refreshToken);
-    setCookies(res,"accessToken",accessToken);
+    setCookies(res, 'refreshToken', refreshToken);
+    setCookies(res, 'accessToken', accessToken);
 
     res.status(200).json({
       status: 'success',
       success: true,
       message: 'User logged in successfully',
-      user:{id:user.id,email:user.email,name:user.name}
-        
+      user: { id: user.id, email: user.email, name: user.name },
     });
   } catch (error) {
     return next(error);
@@ -170,9 +169,9 @@ export const forgotPassword = async (
   req: Request,
   res: Response,
   next: NextFunction
-)=>{
-    await handleForgotPassword(req,res,next,"user");
-}
+) => {
+  await handleForgotPassword(req, res, next, 'user');
+};
 
 //verify forget password OTP
 export const verifyUserForgotPassword = async (
@@ -180,55 +179,129 @@ export const verifyUserForgotPassword = async (
   res: Response,
   next: NextFunction
 ) => {
-    await verifyforgetPasswordOtp(req,res,next);
-}
-
-
+  await verifyforgetPasswordOtp(req, res, next);
+};
 
 //reset password
 export const resetUserPassword = async (
   req: Request,
   res: Response,
   next: NextFunction
-)=>{
-    const {email,newPassword} = req.body;
-    if(!email || !newPassword){
-        return next(new ValidationError("Please provide all the required fields"));
+) => {
+  const { email, newPassword } = req.body;
+  if (!email || !newPassword) {
+    return next(new ValidationError('Please provide all the required fields'));
+  }
+  //find user in db
+
+  const user = await prisma.users.findUnique({
+    where: {
+      email,
+    },
+  });
+
+  if (!user) {
+    return next(new ValidationError('User not found'));
+  }
+
+  //compare password
+  const isSamePassword = await bcrypt.compare(newPassword, user.password!);
+  if (isSamePassword) {
+    return next(new ValidationError('New password is same as old password'));
+  }
+
+  //hash new password
+  const hashPassword = await bcrypt.hash(newPassword, 10);
+
+  //update password
+  await prisma.users.update({
+    where: {
+      id: user.id,
+    },
+    data: {
+      password: hashPassword,
+    },
+  });
+
+  res.status(200).json({
+    status: 'success',
+    success: true,
+    message: 'Password Reset Successfully',
+  });
+};
+
+
+//refresh token user
+
+export const refreshToken= async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
+  try {
+    const { refreshToken } = req.cookies;
+    if(!refreshToken){
+      return next(new ValidationError('Refresh token not found ! UnAuthorized'));
     }
-    //find user in db
 
-    const user = await prisma.users.findUnique({
-      where: {
-        email,
-      },
-    });
-
-    if(!user){
-        return next(new ValidationError("User not found"));
+    const decoded = jwt.verify(refreshToken, process.env.REFRESH_TOKEN_SECRET as string) as {id:string,role:string};
+    if(!decoded ||  !decoded.role || !decoded.id){
+      return next(new JsonWebTokenError('Invalid refresh token ! Forbidden'));
     }
 
-    //compare password
-    const isSamePassword = await bcrypt.compare(newPassword,user.password!);
-    if(isSamePassword){
-        return next(new ValidationError("New password is same as old password"));
-    }
-
-    //hash new password
-    const hashPassword = await bcrypt.hash(newPassword,10);
-
-    //update password
-    await prisma.users.update({
-        where:{
-            id:user.id,
+    // let account ;
+    // if(decoded.role === 'user'){
+      const user = await prisma.users.findUnique({
+        where: {
+          id: decoded.id,
         },
-        data:{
-            password:hashPassword,
-        }
-    })
+      });
+    
+    if(!user){
+      return next(new AuthenticationError('User not found ! UnAuthorized'));
+    }
+
+    const newAccessToken = jwt.sign(
+      { id: decoded.id, role:decoded.role },
+      process.env.ACCESS_TOKEN_SECRET as string,
+      {
+        expiresIn: '15m',
+      }
+    );
+
+    setCookies(res, 'accessToken', newAccessToken);
 
     res.status(200).json({
-        status:"success",
-        success:true,
-        message:"Password Reset Successfully"
-    })
+      status: 'success',
+      success: true,
+      message: 'Token refreshed successfully',
+     
+    });
+
+
+  } catch (error) {
+    return next(error);
+  }
+}; 
+
+
+// get logged in userInfo
+
+export const getUserInfo = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+)=>{
+  try {
+    const { user } = req
+    // const user = req.user 
+    res.status(201).json({
+      status: 'success',
+      success: true,
+      user,
+    });
+  } catch (error) {
+    next(error);
+  }
+
 }
