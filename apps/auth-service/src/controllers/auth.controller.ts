@@ -20,6 +20,8 @@ import { setCookies } from '../utils/cookies/setCookies';
 
 //Register a new user
 
+
+//role attached "user"
 export const userRegistration = async (
   req: Request,
   res: Response,
@@ -112,7 +114,7 @@ export const loginUser = async (
       return next(
         new ValidationError('Please provide all the required fields')
       );
-    }
+    }   
 
     const user = await prisma.users.findUnique({
       where: {
@@ -152,7 +154,7 @@ export const loginUser = async (
     //store refresh token and access token in httpOnly cookie
     setCookies(res, 'refreshToken', refreshToken);
     setCookies(res, 'accessToken', accessToken);
-
+    console.log(res,"testing  purpose ")
     res.status(200).json({
       status: 'success',
       success: true,
@@ -293,15 +295,15 @@ export const getUserInfo = async (
   next: NextFunction
 )=>{
   try {
-    const { user } = req
+    // const { user } = req
     // const user = req.user 
     res.status(201).json({
       status: 'success',
       success: true,
-      user,
+      // user,
     });
   } catch (error) {
-    next(error);
+    next(error);  
   }
 
 }

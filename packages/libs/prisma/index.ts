@@ -1,3 +1,5 @@
+/* eslint-disable no-var */
+/* eslint-disable @typescript-eslint/no-namespace */
 
 // import { PrismaClient } from '../../../prisma/generated/prisma/client';
 import { PrismaClient } from '@prisma/client'; 
@@ -7,10 +9,10 @@ declare global {
     }
 }
 
-const prisma = new PrismaClient();
+    const prisma = new PrismaClient();
 
-if (process.env.NODE_ENV !== 'production') globalThis.prisma = prisma;
+    if (process.env.NODE_ENV !== 'production') global.prisma = prisma;
 
 
 
-export default prisma;
+    export default prisma;

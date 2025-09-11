@@ -24,6 +24,7 @@ app.use(cors(
   }
 ));
 
+// api rate limiting to prevent DDoS attacks
 const rateLimiter =rateLimit({
   windowMs: 15 * 60 * 1000, // 15 minutes
   max: (req:any)=>(req.user ?1000 :100), // limit each IP to 100 requests per windowMs
@@ -47,10 +48,12 @@ app.set('trust proxy', 1);
 app.use('/assets', express.static(path.join(__dirname, 'assets')));
 
 app.get('/gateway-health', (req, res) => {
-  res.send({ message: 'Welcome to api-gateway!' });
+  res.send({ message: 'Welcome to api-gateway at http://localhost:8081' });
 });
 
+// auth-service proxy
 app.use('/',porxy("http://localhost:6001"));
+// 
 
 const port = process.env.PORT || 8081;
 const server = app.listen(port, () => {

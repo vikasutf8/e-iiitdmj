@@ -12,8 +12,9 @@ import Redis from "ioredis";
 // console.log("REDIS DATEBASE URI",process.env.REDIS_DATEBASE_URI);
 
 
-console.log("REDIS DATEBASE URI",process.env.REDIS_DATEBASE_URI);
-const redis = new Redis(process.env.REDIS_DATEBASE_URI!);
+// console.log("REDIS DATEBASE URI",process.env.REDIS_DATEBASE_URI);
+// const redis = new Redis(process.env.REDIS_DATEBASE_URI!);
+const redis = new Redis("rediss://default:AY7MAAIncDE4NjY1YzY0NGVmOTU0YzJmYjRiZDlkOTI1ZGY1ZTg0MHAxMzY1NTY@frank-koala-36556.upstash.io:6379");
 
 
 

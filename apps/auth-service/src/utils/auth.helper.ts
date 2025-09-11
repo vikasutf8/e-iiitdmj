@@ -31,7 +31,7 @@ export const validateRegistrationData = async (
 
 
 export const checkOtpRestrictions = async (email:string,next:NextFunction)=>{
-    // Redis
+    // Redis  : secondary data -not for long
 
     if(await redis.get(`otp_lock:${email}`)){
        return next( new ValidationError("Account locked !! Multiple Failed login attempts ,Try after 30 minutes"));
@@ -47,7 +47,15 @@ export const checkOtpRestrictions = async (email:string,next:NextFunction)=>{
 
 
 }
+export const sentOtp =async (name:string,email:string, template:string)=>{
+    const otp = crypto.randomInt(1000,9999).toString();
 
+    // set this otp in redis {otp,userEmail} also expiry time
+    await sendEmail(email,"Verify your email",template,{name,otp});
+    await redis.set(`otp:${email}`,otp, "EX",300);
+    await redis.set(`otp_cooldown:${email}`, "true", "EX",60);
+
+}
 
 export const trackOtpRequest = async (email:string,next:NextFunction)=>{
     const otpRequestkey = `otp_request_count:${email}`;
@@ -63,15 +71,7 @@ export const trackOtpRequest = async (email:string,next:NextFunction)=>{
 
 }
 
-export const sentOtp =async (name:string,email:string, template:string)=>{
-    const otp = crypto.randomInt(1000,9999).toString();
 
-    // set this otp in redis {otp,userEmail} also expiry time
-    await sendEmail(email,"Verify your email",template,{name,otp});
-    await redis.set(`otp:${email}`,otp, "EX",300);
-    await redis.set(`otp_cooldown:${email}`, "true", "EX",60);
-
-}
 
 
 export const verifyOtp = async (email:string,otp:string,next :NextFunction)=>{
@@ -98,7 +98,7 @@ export const verifyOtp = async (email:string,otp:string,next :NextFunction)=>{
 
 export const handleForgotPassword = async (req:Request,res:Response,next:NextFunction,userType: "user" | "seller")=>{
   try  {
-    const {email} = req.body;
+    const {email} = req.body;   
     if(!email){
       throw new ValidationError("Please provide valid email");
     }

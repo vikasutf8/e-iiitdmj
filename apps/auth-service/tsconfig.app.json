@@ -8,7 +8,8 @@
   },
   "include": [
     "src/**/*.ts",
-  "../../packages/**/**.ts"
+  "../../packages/**/**.ts",
+  "../../packages/**/*.js",
 ],
   "exclude": [
     "out-tsc",
