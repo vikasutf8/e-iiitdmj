@@ -47,15 +47,6 @@ export const checkOtpRestrictions = async (email:string,next:NextFunction)=>{
 
 
 }
-export const sentOtp =async (name:string,email:string, template:string)=>{
-    const otp = crypto.randomInt(1000,9999).toString();
-
-    // set this otp in redis {otp,userEmail} also expiry time
-    await sendEmail(email,"Verify your email",template,{name,otp});
-    await redis.set(`otp:${email}`,otp, "EX",300);
-    await redis.set(`otp_cooldown:${email}`, "true", "EX",60);
-
-}
 
 export const trackOtpRequest = async (email:string,next:NextFunction)=>{
     const otpRequestkey = `otp_request_count:${email}`;
@@ -70,27 +61,39 @@ export const trackOtpRequest = async (email:string,next:NextFunction)=>{
     await redis.set(otpRequestkey,otpRequests+1,"EX",3600); //track otp request 1 hour
 
 }
+export const sentOtp =async (name:string,email:string, template:string)=>{
+    const otp = crypto.randomInt(1000,9999).toString();
+
+    // set this otp in redis {otp,userEmail} also expiry time
+    await sendEmail(email,"Verify your email",template,{name,otp});
+    await redis.set(`otp:${email}`,otp, "EX",300);
+    await redis.set(`otp_cooldown:${email}`, "true", "EX",60);
+
+}
+
 
 
 
 
 export const verifyOtp = async (email:string,otp:string,next :NextFunction)=>{
+  
   const storedOtp = await redis.get(`otp:${email}`);
   if(!storedOtp){
-    throw new ValidationError("Invalid OTP OR OTP Expired");
+    throw new ValidationError("Invalid or Expired OTP");
   }
 
   const failedAttemptsKey= `otp_attempts:${email}` ;
   const failedAttempts = parseInt((await redis.get(failedAttemptsKey)) || "0");
+  console.log(storedOtp ,"otp:",otp);
 
-  if(storedOtp === otp){
+  if(storedOtp !== otp){
     if(failedAttempts > 3){
       await redis.set(`otp_lock:${email}`, "locked", "EX",1800);  //lock for 30 min
       await redis.del(`otp:${email}`,failedAttemptsKey);
       throw new ValidationError("Account locked !! Too many OTP Attempts , Wait 30 min for next otp");
     }
     await redis.set(failedAttemptsKey,failedAttempts+1,"EX",1800);
-  throw new ValidationError(`Invalid OTP . ${2-failedAttempts} attempts left`);
+    return next( new ValidationError(`Invalid OTP . ${2-failedAttempts} attempts left`));
   }
 
   await redis.del(`otp:${email}`,failedAttemptsKey);
@@ -119,7 +122,8 @@ export const handleForgotPassword = async (req:Request,res:Response,next:NextFun
     await trackOtpRequest(email,next);
 
     //generate otp
-    await sentOtp(email,user.name,`${userType}-forget-password-reset`);
+    
+    await sentOtp(user.name,email,`${userType}-forget-password-reset`);
 
     res.status(200).json({
       status: 'success',

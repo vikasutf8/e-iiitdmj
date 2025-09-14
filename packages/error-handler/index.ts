@@ -24,11 +24,12 @@ export class NotFoundError extends AppError {
     ) {
         super(message, 404, false);
     }
-}
+}   
 
 //validation error
 export class ValidationError extends AppError {
     constructor(message="Invalid input data", details?:any) {
+        console.log("validation error",message,details);
         super(message, 400, true, details);
     }
 }

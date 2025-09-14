@@ -91,12 +91,14 @@ export const verifyUser = async (
         name,
       },
     });
+    // updateing user as can return response remove password
+ 
 
     res.status(200).json({
       status: 'success',
       success: true,
       message: 'User registered successfully',
-      user,
+      user,//later hvaw to remove
     });
   } catch (error) {
     return next(error);
@@ -151,15 +153,19 @@ export const loginUser = async (
       }
     );
 
+    // console.log("refreshToken",refreshToken);
+    // console.log("accessToken",accessToken);
     //store refresh token and access token in httpOnly cookie
     setCookies(res, 'refreshToken', refreshToken);
     setCookies(res, 'accessToken', accessToken);
-    console.log(res,"testing  purpose ")
+
+    console.log(user+"this ios login-user coming ");
     res.status(200).json({
       status: 'success',
       success: true,
       message: 'User logged in successfully',
-      user: { id: user.id, email: user.email, name: user.name },
+      data: { id: user.id, email: user.email, name: user.name },
+      user, //have to remove it later
     });
   } catch (error) {
     return next(error);
