@@ -21,7 +21,7 @@ type FormData = {
     email: string,
     password: string
 }
-const ForgetPassword = () => {
+const ForgotPassword = () => {
     const [serverError, setServerError] = useState<string | null>(null);
     const [step, setStep] = useState<"email" | "otp" | "reset">("email");
     const [otp, setOtp] = useState(["", "", "", ""]);
@@ -85,6 +85,8 @@ const ForgetPassword = () => {
         },
         onError: (error: AxiosError) => {
             const errorMessage = (error.response?.data as { message?: string }).message || error.message || "Invalid OTP .try again";
+              console.log(error,"jkfghaksdf")
+            console.log(errorMessage + "request otp mutations")
             setServerError(errorMessage);
         },
 
@@ -94,15 +96,18 @@ const ForgetPassword = () => {
     const verifyOtpMutation = useMutation({
         mutationFn: async () => {
             if (!userEmail) { return; }
-            const response = await axios.post(`${process.env.NEXT_PUBLIC_SERVER_URI}/api/v1/verify-otp-user`, { email: userEmail, otp: otp.join("") });
+            const response = await axios.post(`${process.env.NEXT_PUBLIC_SERVER_URI}/api/v1/verify-forgot-password-user`, { email: userEmail, otp: otp.join("") });
             return response.data;
         },
         onSuccess: () => {
             setStep("reset");
+
             setServerError(null);
         },
         onError: (error: AxiosError) => {
             const errorMessage = (error.response?.data as { message?: string }).message || error.message || "Invalid OTP .try again";
+            console.log(error,"jkfghaksdf")
+             console.log(errorMessage + "verify otp mutation")
             setServerError(errorMessage);
         },
     })
@@ -121,6 +126,7 @@ const ForgetPassword = () => {
         },
         onError: (error: AxiosError) => {
             const errorMessage = (error.response?.data as { message?: string }).message || error.message || "Invalid OTP .try again";
+             console.log(errorMessage + "reset otp mutations")
             setServerError(errorMessage);
         },
     })
@@ -140,7 +146,8 @@ const ForgetPassword = () => {
             <p className='text-lg text-center font-medium py-3 text-[#00000080]'>Enter your email to reset password</p>
             <div className='w-full flex items-center justify-center'>
                 <div className='md:w-[480px] bg-white shadow-md rounded-lg border-2 border-gray-300 px-10 py-5 m-5'>
-                    step === "email" &&(
+                    {step === "email" && (
+                  <>
                     <h3 className='text-3xl font-semibold text-center mb-3  '>
                         Login to Eshop
                     </h3>
@@ -175,9 +182,10 @@ const ForgetPassword = () => {
                         </button>
                         {serverError && <p className='text-red-500 text-sm'>{serverError}</p>}
                     </form>
-                    )
+                    </>
+                    )}
 
-                    step === "otp" && (
+                   { step === "otp" && (
                     <>
                         <h3 className='text-xl font-bold text-center mb-4'>Enter OTP</h3>
                         <div className='flex justify-center gap-6'>
@@ -212,19 +220,20 @@ const ForgetPassword = () => {
                             {verifyOtpMutation.isPending ? "Verifying OTP..." : "Verify OTP"}
                         </button>
                         {/* ??? */}
-                            verifyOtpMutation.isError && (
+                            
+                        {/* verifyOtpMutation.isError && (
                                 verifyOtpMutation.error instanceof AxiosError ?
                                     <p className='text-red-500 text-sm'>
                                         {String(verifyOtpMutation.error)}
                                     </p>
                                 
-                            )
-                        
+                            ) */}
 
                     </>
                     )
 
-                    step === "reset" && (
+                }
+                    {step === "reset" && (
                     <>
                         <h3 className='text-xl font-bold text-center mb-4'>New Password</h3>
                         <form onSubmit={handleSubmit(onSubmitPassword)}>
@@ -257,11 +266,11 @@ const ForgetPassword = () => {
                         </form>
                     </>
                     )
-
+                }
                 </div>
             </div>
         </div>
     )
 }
 
-export default ForgetPassword
+export default ForgotPassword
