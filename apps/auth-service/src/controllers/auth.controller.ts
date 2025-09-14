@@ -290,17 +290,16 @@ export const refreshToken= async (
 // get logged in userInfo
 
 export const getUserInfo = async (
-  req: Request,
+  req: any,
   res: Response,
   next: NextFunction
 )=>{
   try {
-    // const { user } = req
-    // const user = req.user 
+    const { user } = req
     res.status(201).json({
       status: 'success',
       success: true,
-      // user,
+      user,
     });
   } catch (error) {
     next(error);  

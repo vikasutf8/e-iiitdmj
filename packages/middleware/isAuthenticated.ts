@@ -20,13 +20,13 @@ import jwt from "jsonwebtoken";
         message: 'Unauthorized !! Invalid token',
       });
     }
-
+// getting data after comparing for id comming from token
     const account =await prisma.users.findUnique({
       where: {
         id: decoded.id,
       },
     });
-
+// set that data/user to req.user
     req.user = account;
 
     if(!account){
