@@ -4,11 +4,14 @@ import React, { useEffect, useState } from 'react'
 import { navItems } from '../../configs/constant';
 import Link from 'next/link';
 import ProfileIcon from '../../assests/svgs/profile-icon';
+import useUser from '../../hooks/useUser';
 
 const HeaderBottom = () => {
     const [show, setShow] = useState(false);
     const [isSticky, setIsSticky] = useState(false);
+    const {user} = useUser();
 
+    console.log(user,+"data coming header bottom via custom hooks")
 
     // tracking scroll position
     useEffect(() => {
