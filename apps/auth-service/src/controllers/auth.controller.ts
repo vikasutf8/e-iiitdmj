@@ -358,3 +358,71 @@ export const sellerRegistration = async (
     return next(error);
   }
 };
+
+
+
+// verify seller OTP
+export const verifySeller = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
+  try {
+    const { email, otp, name, password , phone_number,country } = req.body;
+    if (!email || !otp || !name || !password || !phone_number || !country) {
+      return next( new ValidationError('Please provide all the required fields'));
+    }
+
+    const isSellerExists = await prisma.sellers.findUnique({
+      where: {
+        email,
+      },
+    });
+    if (isSellerExists) {
+      return next(new ValidationError('Seller already exists with this email'));
+    }
+
+    await verifyOtp(email, otp, next);
+
+    const hashPassword = await bcrypt.hash(password, 10);
+
+    const seller = await prisma.sellers.create({
+      data: {
+        email,
+        password: hashPassword,
+        name,
+        phone_number, 
+        country,
+      },
+    });
+
+
+
+    res.status(200).json({
+      status: 'success',
+      message: 'Seller activated successfully',
+      seller,
+    });
+  } catch (error) {
+    next(error);
+  }
+}
+
+
+// create a new shop
+
+
+export const createShop =async(
+  req : Request,
+  res: Response,
+  next : NextFunction
+)=>{
+  try {
+    const {name, bio, address , opening_hours,website,category,sellerId} =req.body;
+
+    if(!name || !bio  )
+
+  } catch (error) {
+    next(error)
+  }
+}

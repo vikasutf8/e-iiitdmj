@@ -70,11 +70,6 @@ export const sentOtp =async (name:string,email:string, template:string)=>{
     await redis.set(`otp_cooldown:${email}`, "true", "EX",60);
 
 }
-
-
-
-
-
 export const verifyOtp = async (email:string,otp:string,next :NextFunction)=>{
   
   const storedOtp = await redis.get(`otp:${email}`);
@@ -84,7 +79,7 @@ export const verifyOtp = async (email:string,otp:string,next :NextFunction)=>{
 
   const failedAttemptsKey= `otp_attempts:${email}` ;
   const failedAttempts = parseInt((await redis.get(failedAttemptsKey)) || "0");
-  console.log(storedOtp ,"otp:",otp);
+  // console.log(storedOtp ,"otp:",otp);
 
   if(storedOtp !== otp){
     if(failedAttempts > 3){
@@ -107,11 +102,15 @@ export const handleForgotPassword = async (req:Request,res:Response,next:NextFun
     }
     //find user/seller in db
 
-    const user =userType === "user" && await prisma.users.findUnique({
+    const user =userType === "user" ? (await prisma.users.findUnique({
       where: {
         email,
       },
-    })
+    })) : (await prisma.sellers.findUnique({
+      where: {
+        email,
+      },
+    }));
 
     if(!user){
       throw new ValidationError(`${userType} not found`);
