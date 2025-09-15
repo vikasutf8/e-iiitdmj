@@ -420,9 +420,46 @@ export const createShop =async(
   try {
     const {name, bio, address , opening_hours,website,category,sellerId} =req.body;
 
-    if(!name || !bio  )
+    if(!name || !bio || !address || !opening_hours || !website || !category || !sellerId){
+      return res.status(400).json({message:"Please fill all the fields"})
+    }
+
+    const shopData ={
+      name,
+      bio,
+      address,
+      opening_hours,
+      website,
+      category,
+      sellerId,
+    }
+
+    if(website && website.trim !== ''){
+      shopData.website = website;
+    }
+
+    const shop = await prisma.shops.create({
+      data: shopData,
+    });
+
+    res.status(201).json({
+      status: 'success',
+      success: true,
+      message: 'Shop created successfully',
+      shop,
+    });
+
 
   } catch (error) {
     next(error)
   }
+}
+
+// create strinpe connect account Link
+export const createStripeConnectAccount = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+)=>{
+  return null
 }

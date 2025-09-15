@@ -15,7 +15,7 @@ import Link from 'next/link'
 
 import { Eye, EyeOff } from 'lucide-react'
 import axios, { AxiosError } from 'axios'
-import { countries } from 'apps/seller-ui/src/utils/countries'
+
 
 // type FormData = {
 //     email: string ,
@@ -30,7 +30,7 @@ const SignUp = () => {
     const [showOtp, setShowOtp] = useState(false);
     const [timer, setTimer] = useState(60);
     const [otp, setOtp] = useState(["", "", "", ""]);
-    const [userData, setUserData] = useState(null);
+    const [sellerData, setSellerData] = useState(null);
     const inputRef = useRef<(HTMLInputElement | null)[]>([]);
 
     const router = useRouter();
@@ -53,14 +53,14 @@ const SignUp = () => {
     // tanStack
     const signupMutation = useMutation({
         mutationFn: async (data: any) => {
-            const response = await axios.post(`${process.env.NEXT_PUBLIC_SERVER_URI}/api/v1/user-registration`, data);
+            const response = await axios.post(`${process.env.NEXT_PUBLIC_SERVER_URI}/api/v1/seller-registration`, data);
             return response.data;
             // return true;
-
+ 
 
         },
         onSuccess: (_, formData) => {
-            setUserData(formData);
+            setSellerData(formData);
             setShowOtp(true);
             setCanResend(false);
             setTimer(60);
@@ -70,9 +70,9 @@ const SignUp = () => {
 
     const verifyOtpMutation = useMutation({
         mutationFn: async () => {
-            if (!userData) return;
-            const response = await axios.post(`${process.env.NEXT_PUBLIC_SERVER_URI}/api/v1/verify-user`, {
-                ...userData,
+            if (!sellerData) return;
+            const response = await axios.post(`${process.env.NEXT_PUBLIC_SERVER_URI}/api/v1/verify-seller`, {
+                ...sellerData,
                 otp: otp.join("")
             });
             return response.data;
@@ -113,8 +113,8 @@ const SignUp = () => {
     }
 
     const resendOtp = () => {
-        if (!userData) { return; }
-        signupMutation.mutate(userData);
+        if (!sellerData) { return; }
+        signupMutation.mutate(sellerData);
     }
 
     return (
