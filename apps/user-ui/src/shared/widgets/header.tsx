@@ -1,12 +1,18 @@
+"use client"
 import Link from 'next/link'
 import React from 'react'
 import { Heart, Search, SearchCheck, ShoppingCart } from 'lucide-react';
 import ProfileIcon from '../../assests/svgs/profile-icon';
 import HeaderBottom from './header-bottom';
+import useUser from '../../hooks/useUser';
 
 
 
 const Header = () => {
+
+    const {user, isLoading, isError } = useUser();
+
+
     return (
         <div className='w-full bg-white shadow-md  border-b-[#99999938]'
     >
@@ -25,14 +31,34 @@ const Header = () => {
                 </div>
                 <div className='flex items-center gap-8'>
                     <div className='flex items-center gap-2 '>
+
+                        {!isLoading && user ?(
+                          <>
+                            <Link href={"/profile"}>
+                                 <ProfileIcon />
+                        </Link>
+                        
+                         <Link href={"/profile"}>
+                            <span className='block font-medium '>Hello'S</span>
+                            <span className='font-semibold'>{user?.name.split(" ")[0]}</span>
+                        </Link>
+                          </>
+                        ):(
+                       <>
                         <Link href={"/login"}
                             className='border-2 w-[50px] h-[50px] m-auto flex items-center justify-center rounded-full border-[#010f1c1a]'>
                             <ProfileIcon />
                         </Link>
-                        <Link href={"/login"}>
+                        
+                         <Link href={"/login"}>
                             <span className='block font-medium '>Hello'S</span>
-                            <span className='font-semibold'>Sign IN</span>
+                            <span className='font-semibold'>{isLoading ? "..." : "Login" }</span>
                         </Link>
+                       </>
+                        )}
+
+                      
+                       
                     </div>
                     <div className='flex items-center gap-5'>
                         <Link href={"/wishlist"} className='relative'>

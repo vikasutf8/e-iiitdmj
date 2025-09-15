@@ -6,6 +6,7 @@ import axiosInstance from "../utils/axiosinstance";
 
 const fetchUser =async ()=>{
   const response = await axiosInstance.get("/api/v1/logged-in-user");
+  console.log(response.data.user,"response.data.user");
   return response.data.user;
 }
 
@@ -16,9 +17,7 @@ const useUser = () => {
         queryFn: fetchUser,
         staleTime: 1000 * 60 * 5,
         retry:1,
-    },
-    
-  );
+    },);
   return {user,isLoading,isError,refetch};
 }
 

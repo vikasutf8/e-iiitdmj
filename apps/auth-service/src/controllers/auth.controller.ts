@@ -307,6 +307,7 @@ export const getUserInfo = async (
       success: true,
       user,
     });
+  
   } catch (error) {
     next(error);  
   }

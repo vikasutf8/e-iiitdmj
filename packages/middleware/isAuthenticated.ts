@@ -1,10 +1,11 @@
 import { NextFunction, Response } from "express";
 import jwt from "jsonwebtoken";
+import prisma from "../../packages/libs/prisma";
 
 
  export const isAuthenticated =async (req:any,res:Response,next:NextFunction)=>{
   try {
-    const token = req.cookies.accessToken || req.headers.authorization.split(" ")[1];
+    const token = req.cookies?.accessToken || req.headers?.authorization?.split(" ")[1];
     if(!token){
       return res.status(401).json({
         status: 'error',
@@ -21,6 +22,7 @@ import jwt from "jsonwebtoken";
       });
     }
 // getting data after comparing for id comming from token
+    console.log(decoded,"decoded")
     const account =await prisma.users.findUnique({
       where: {
         id: decoded.id,
@@ -28,7 +30,7 @@ import jwt from "jsonwebtoken";
     });
 // set that data/user to req.user
     req.user = account;
-
+console.log(req.user+"is authectication");
     if(!account){
       return res.status(401).json({
         status: 'error',
@@ -40,10 +42,10 @@ import jwt from "jsonwebtoken";
 return next()
     
 
-  } catch (error) {
+  } catch (error:any) {
     return res.status(401).json({
       status: 'error',
-      message: "Error occured while verifying token",
+      message: error.message ||"Error occured while verifying token",
     });
   }
 }
