@@ -9,8 +9,14 @@ import useUser from '../../hooks/useUser';
 const HeaderBottom = () => {
     const [show, setShow] = useState(false);
     const [isSticky, setIsSticky] = useState(false);
+
     const {user, isLoading, isError } = useUser();
 // console.log("User data:", JSON.stringify(user, null, 2))
+
+
+
+    console.log(user,+"data coming header bottom via custom hooks")
+
     // tracking scroll position
     useEffect(() => {
         const handleScroll = () => {
@@ -69,6 +75,7 @@ const HeaderBottom = () => {
                         <div className='flex items-center gap-8'>
                             <div className='flex items-center gap-2 '>
 
+
                         {!isLoading && user ?(
                           <>
                             <Link href={"/profile"}>
@@ -97,6 +104,7 @@ const HeaderBottom = () => {
                       
                        
                     </div>
+
                             <div className='flex items-center gap-5'>
                                 <Link href={"/wishlist"} className='relative'>
                                     <Heart />
