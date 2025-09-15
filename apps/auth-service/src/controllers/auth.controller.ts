@@ -10,7 +10,7 @@ import {
   verifyOtp,
 } from '../utils/auth.helper';
 import prisma from '../../../../packages/libs/prisma';
-import Stripe from 'stripe';
+// import Stripe from 'stripe';
 import {
   AuthenticationError,
   ValidationError,
@@ -19,9 +19,9 @@ import bcrypt from 'bcryptjs';
 import jwt, { JsonWebTokenError } from 'jsonwebtoken';
 import { setCookies } from '../utils/cookies/setCookies';
 
-const stripe = new Stripe(process.env.STRIPE_SECRET_KEY! as string, {
-  apiVersion: '2025-08-27.basil',
-});
+// const stripe = new Stripe(process.env.STRIPE_SECRET_KEY! as string, {
+//   apiVersion: '2025-08-27.basil',
+// });
 
 
 //Register a new user
@@ -458,65 +458,65 @@ export const createStripeConnectAccount = async (
   res: Response,
   next: NextFunction
 )=>{
-  try {
-      const {sellerId} = req.body;
-      if(!sellerId){
-        return next(new ValidationError("Please provide valid sellerId"));
-      }
+  // try {
+  //     const {sellerId} = req.body;
+  //     if(!sellerId){
+  //       return next(new ValidationError("Please provide valid sellerId"));
+  //     }
 
-      const seller = await prisma.sellers.findUnique({
-        where: {
-          id: sellerId,
-        },
-      });
+  //     const seller = await prisma.sellers.findUnique({
+  //       where: {
+  //         id: sellerId,
+  //       },
+  //     });
 
-      if(!seller){
-        return next(new ValidationError("Seller not found"));
-      }
+  //     if(!seller){
+  //       return next(new ValidationError("Seller not found"));
+  //     }
 
-      const stripeAccount = await stripe.accounts.create({
-        type: 'express',
-        country: 'IN', //GB -uk
-        email: seller.email,
-        capabilities: {
-          card_payments: {
-            requested: true,
-          },
-          transfers: {
-            requested: true,
-          },
-        },
-      });
+  //     const stripeAccount = await stripe.accounts.create({
+  //       type: 'express',
+  //       country: 'IN', //GB -uk
+  //       email: seller.email,
+  //       capabilities: {
+  //         card_payments: {
+  //           requested: true,
+  //         },
+  //         transfers: {
+  //           requested: true,
+  //         },
+  //       },
+  //     });
 
-      await prisma.sellers.update({
-        where: {
-          id: sellerId,
-        },
-        data: {
-          stripeId: stripeAccount.id,
-        },
-      });
+  //     await prisma.sellers.update({
+  //       where: {
+  //         id: sellerId,
+  //       },
+  //       data: {
+  //         stripeId: stripeAccount.id,
+  //       },
+  //     });
 
-      const accountLink = await stripe.accountLinks.create({
-        account: stripeAccount.id,
-        // eslint-disable-next-line no-constant-binary-expression
-        return_url: `${process.env.NEXT_PUBLIC_SERVER_URI}/api/v1/stripe-account-link` || `http://localhost:3000/api/v1/success`,
-        type: 'account_onboarding',
-        // eslint-disable-next-line no-constant-binary-expression
-        refresh_url: `${process.env.NEXT_PUBLIC_SERVER_URI}/api/v1/stripe-account-link` || `http://localhost:3000/api/v1/success`,
-        //   type: 'account_onboarding',
-        //   refresh_url: `${process.env.NEXT_PUBLIC_SERVER_URI}/api/v1/stripe-account-link`,
-      });
+  //     const accountLink = await stripe.accountLinks.create({
+  //       account: stripeAccount.id,
+  //       // eslint-disable-next-line no-constant-binary-expression
+  //       return_url: `${process.env.NEXT_PUBLIC_SERVER_URI}/api/v1/stripe-account-link` || `http://localhost:3000/api/v1/success`,
+  //       type: 'account_onboarding',
+  //       // eslint-disable-next-line no-constant-binary-expression
+  //       refresh_url: `${process.env.NEXT_PUBLIC_SERVER_URI}/api/v1/stripe-account-link` || `http://localhost:3000/api/v1/success`,
+  //       //   type: 'account_onboarding',
+  //       //   refresh_url: `${process.env.NEXT_PUBLIC_SERVER_URI}/api/v1/stripe-account-link`,
+  //     });
       
-      res.status(200).json({
-        status: 'success',
-        success: true,
-        message: 'Stripe account created successfully',
-        url: accountLink.url,
-      });
+  //     res.status(200).json({
+  //       status: 'success',
+  //       success: true,
+  //       message: 'Stripe account created successfully',
+  //       url: accountLink.url,
+  //     });
 
 
-  } catch (error) {
-    next(error);
-  }
+  // } catch (error) {
+  //   next(error);
+  // }
 }
