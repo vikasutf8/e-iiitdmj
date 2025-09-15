@@ -315,3 +315,46 @@ export const getUserInfo = async (
   }
 
 }
+
+
+
+/*
+**********************
+Seller Controller
+************************
+*/
+
+// register a new seller
+export const sellerRegistration = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
+  try {
+    validateRegistrationData(req.body, 'seller');
+    const { email, name } = req.body;
+
+    const existingSeller = await prisma.sellers.findUnique({
+      where: {
+        email,
+      },
+    });
+
+    if (existingSeller) {
+      throw new ValidationError('Seller already exists');
+    }
+
+    //otp  : send otp 1. checking regisation data 2. user is new 3. adding restrictions
+    await checkOtpRestrictions(email, next);
+    await trackOtpRequest(email, next);
+    await sentOtp(name, email, 'seller-activation-mail');
+
+    res.status(200).json({
+      status: 'success',
+      message: 'Otp sent successfully | Verify your account',
+    }); 
+    
+  } catch (error) {
+    return next(error);
+  }
+};
