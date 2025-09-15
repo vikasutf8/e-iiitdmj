@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 'use client'
 
 import React, { useRef, useState } from 'react'
@@ -15,22 +16,25 @@ import Link from 'next/link'
 
 import { Eye, EyeOff } from 'lucide-react'
 import axios, { AxiosError } from 'axios'
+import { countries } from '../../../utils/countries'
+import CreateShop from '../../../shared/modules/auth/createShop'
 
 
 // type FormData = {
-//     email: string ,
+//     email: string ,  
 //     password: string,
 //     name: string
 // }
 const SignUp = () => {
     const [passwordVisible, setPasswordVisible] = useState(false);
-    const [activeStep, setActiveStep] = useState(1);
+    const [activeStep, setActiveStep] = useState(3);
     const [serverError, setServerError] = useState<string | null>(null);
     const [canResend, setCanResend] = useState(true);
     const [showOtp, setShowOtp] = useState(false);
     const [timer, setTimer] = useState(60);
     const [otp, setOtp] = useState(["", "", "", ""]);
-    const [sellerData, setSellerData] = useState(null);
+    const [sellerData, setSellerData] = useState<FormData | null>(null);
+    const [sellerId,setSellerId]= useState("")
     const inputRef = useRef<(HTMLInputElement | null)[]>([]);
 
     const router = useRouter();
@@ -77,8 +81,10 @@ const SignUp = () => {
             });
             return response.data;
         },
-        onSuccess: (data: FormData) => {
-            router.push("/login");
+        onSuccess: (data) => {
+            console.log(data ,"this verifice data")
+            setSellerId(data?.seller?.id);
+            setActiveStep(2)
         },
     });
 
@@ -115,6 +121,13 @@ const SignUp = () => {
     const resendOtp = () => {
         if (!sellerData) { return; }
         signupMutation.mutate(sellerData);
+    }
+
+    const connectPaypal = () => {
+        console.log("paypal connect")
+    }
+    const connectStripe = () => {
+        console.log("stripe connect")
     }
 
     return (
@@ -331,8 +344,30 @@ const SignUp = () => {
                             )
                         }
                     </>
-                )
-
+                ) }
+                {
+                    activeStep === 2 && (
+                        <CreateShop sellerId={sellerId} setActiveStep={setActiveStep} />
+                    )
+                }
+                {
+                    activeStep === 3 && (
+                       <div className='text-center'>
+                           <h3 className='text-2xl font-bold flex justify-center'>Withdraw Method</h3>
+                           <br />
+                           <div className='flex gap-4'>
+                               <button className='mt-4 w-1/2 text-xl cursor-pointer bg-[#0000008c] hover:bg-black active:bg-black text-white py-2 rounded-lg'
+                               onClick={connectPaypal}>
+                                   Connect Paypal
+                               </button>
+                               <button className='mt-4 w-1/2 text-xl cursor-pointer bg-[#0000008c] hover:bg-black active:bg-black text-white py-2 rounded-lg'
+                               onClick={connectStripe}
+                               >
+                                   Connect Stripe
+                               </button>
+                           </div>
+                       </div>
+                    )
                 }
             </div>
 

@@ -412,7 +412,7 @@ export const verifySeller = async (
 // create a new shop
 
 
-export const createShop =async(
+export const createShop = async(
   req : Request,
   res: Response,
   next : NextFunction
@@ -421,13 +421,13 @@ export const createShop =async(
     const {name, bio, address , opening_hours,website,category,sellerId} =req.body;
 
     if(!name || !bio || !address || !opening_hours || !website || !category || !sellerId){
-      return res.status(400).json({message:"Please fill all the fields"})
+      return next(new ValidationError('Please fill all the fields'));
     }
 
     const shopData ={
       name,
       bio,
-      address,
+      address,  
       opening_hours,
       website,
       category,
@@ -451,7 +451,7 @@ export const createShop =async(
 
 
   } catch (error) {
-    next(error)
+    return next(error)
   }
 }
 
