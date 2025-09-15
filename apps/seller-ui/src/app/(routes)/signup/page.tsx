@@ -126,8 +126,17 @@ const SignUp = () => {
     const connectPaypal = () => {
         console.log("paypal connect")
     }
-    const connectStripe = () => {
-        console.log("stripe connect")
+    const connectStripe = async() => {
+        try {
+            const response = await axios.post(`${process.env.NEXT_PUBLIC_SERVER_URI}/api/v1/create-stripe-account`, {
+                sellerId
+            });
+            if (response.data.status === "success" && response.data.url) {
+                window.location.href = response.data.url;
+            }
+        } catch (error) {
+            console.log("Stripe connect error", error);
+        }
     }
 
     return (

@@ -7,7 +7,6 @@
     "auth-docs": "node apps/auth-service/src/swagger.js",
     "user-ui": "npx nx run-many --target=dev --all --projects=user-ui",
     "seller-ui": "npx nx run-many --target=dev --all --projects=seller-ui"
-
   },
   "private": true,
   "dependencies": {
@@ -36,6 +35,7 @@
     "react-dom": "19.0.0",
     "react-hook-form": "^7.62.0",
     "remixicon": "^4.6.0",
+    "stripe": "^18.5.0",
     "swagger-autogen": "^2.23.7",
     "swagger-ui-express": "^5.0.1"
   },
