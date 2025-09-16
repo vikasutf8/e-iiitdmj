@@ -2,17 +2,11 @@
 
 import React, { useState } from 'react'
 import {
-    QueryClient,
-    QueryClientProvider,
     useMutation,
-    useQuery,
 } from '@tanstack/react-query'
-
 import { useForm } from 'react-hook-form'
 import { useRouter } from 'next/navigation'
 import Link from 'next/link'
-// eslint-disable-next-line @nx/enforce-module-boundaries
-
 import { Eye, EyeOff } from 'lucide-react'
 import axios,{AxiosError} from 'axios'
 
@@ -32,7 +26,7 @@ const Login = () => {
 
     const loginMutation = useMutation({
         mutationFn: async (data: FormData) => {
-            const response = await axios.post(`${process.env.NEXT_PUBLIC_SERVER_URI}/api/v1/login-user`, data,{
+            const response = await axios.post(`${process.env.NEXT_PUBLIC_SERVER_URI}/api/v1/login-seller`, data,{
                 withCredentials: true,
             });
             return response.data;

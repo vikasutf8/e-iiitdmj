@@ -1,4 +1,4 @@
-/* eslint-disable @typescript-eslint/no-unused-vars */
+
 'use client'
 
 import React, { useRef, useState } from 'react'
@@ -12,7 +12,7 @@ import {
 import { useForm } from 'react-hook-form'
 import { useRouter } from 'next/navigation'
 import Link from 'next/link'
-// eslint-disable-next-line @nx/enforce-module-boundaries
+
 
 import { Eye, EyeOff } from 'lucide-react'
 import axios, { AxiosError } from 'axios'
@@ -20,14 +20,9 @@ import { countries } from '../../../utils/countries'
 import CreateShop from '../../../shared/modules/auth/createShop'
 
 
-// type FormData = {
-//     email: string ,  
-//     password: string,
-//     name: string
-// }
 const SignUp = () => {
     const [passwordVisible, setPasswordVisible] = useState(false);
-    const [activeStep, setActiveStep] = useState(3);
+    const [activeStep, setActiveStep] = useState(1);
     const [serverError, setServerError] = useState<string | null>(null);
     const [canResend, setCanResend] = useState(true);
     const [showOtp, setShowOtp] = useState(false);
@@ -37,7 +32,6 @@ const SignUp = () => {
     const [sellerId,setSellerId]= useState("")
     const inputRef = useRef<(HTMLInputElement | null)[]>([]);
 
-    const router = useRouter();
 
     const { register, handleSubmit, formState: { errors } } = useForm();
 
@@ -59,9 +53,6 @@ const SignUp = () => {
         mutationFn: async (data: any) => {
             const response = await axios.post(`${process.env.NEXT_PUBLIC_SERVER_URI}/api/v1/seller-registration`, data);
             return response.data;
-            // return true;
- 
-
         },
         onSuccess: (_, formData) => {
             setSellerData(formData);
@@ -89,9 +80,7 @@ const SignUp = () => {
     });
 
     const onSubmit = async (data: any) => {
-        // console.log(data);
         signupMutation.mutate(data);
-
     }
 
 
@@ -128,7 +117,7 @@ const SignUp = () => {
     }
     const connectStripe = async() => {
         try {
-            const response = await axios.post(`${process.env.NEXT_PUBLIC_SERVER_URI}/api/v1/create-stripe-account`, {
+            const response = await axios.post(`${process.env.NEXT_PUBLIC_SERVER_URI}/api/v1/create-stripe-link`, {
                 sellerId
             });
             if (response.data.status === "success" && response.data.url) {
