@@ -4,23 +4,23 @@ import axiosInstance from "../utils/axiosinstance";
 
 // fetch user data from api
 
-const fetchUser =async ()=>{
-  const response = await axiosInstance.get("/api/v1/logged-in-user");
-
-  return response.data.user;
+const fetchSeller =async ()=>{
+  const response = await axiosInstance.get("/api/v1/logged-in-seller");
+console.log(response.data.seller,"user seller hooks");
+  return response.data.seller;
 }
-const useUser = () => {
-  const {data:user, isLoading,isError,refetch } = useQuery(
+const useSeller = () => {
+  const {data:seller, isLoading,isError,refetch } = useQuery(
     {
-        queryKey: ["user"],
-        queryFn: fetchUser,
+        queryKey: ["seller"],
+        queryFn: fetchSeller,
         staleTime: 1000 * 60 * 5,
         retry:1,
-
+ 
     },);
 
-  return {user,isLoading,isError,refetch};
+  return {seller,isLoading,isError,refetch};
 }
 
 
-export default useUser;
+export default useSeller;

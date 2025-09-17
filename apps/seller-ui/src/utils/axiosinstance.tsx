@@ -52,7 +52,7 @@ axiosInstance.interceptors.response.use(
       isRefreshing = true;
       try {
         // const refreshToken = getCookies('refreshToken') as string;
-        const response = await axios.post(`${process.env.NEXT_PUBLIC_SERVER_URI}/auth/refresh-token-user`,{
+        const response = await axios.post(`${process.env.NEXT_PUBLIC_SERVER_URI}/auth/refresh-token`,{
           // refreshToken,
         },{
           withCredentials: true,

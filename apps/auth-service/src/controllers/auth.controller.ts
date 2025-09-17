@@ -241,14 +241,18 @@ export const resetUserPassword = async (
     message: 'Password Reset Successfully',
   });
 };
-//refresh token user
+//refresh token user | Seller
 export const refreshToken= async (
   req: Request,
   res: Response,
   next: NextFunction
 ) => {
   try {
-    const { refreshToken } = req.cookies;
+    const refreshToken =
+      req.cookies['refreshToken'] ||
+      req.cookies['SellerRefreshToken'] ||
+      req.headers?.authorization?.split(' ')[1];
+
     if(!refreshToken){
       return next(new ValidationError('Refresh token not found ! UnAuthorized'));
     }
@@ -258,16 +262,27 @@ export const refreshToken= async (
       return next(new JsonWebTokenError('Invalid refresh token ! Forbidden'));
     }
 
-    // let account ;
-    // if(decoded.role === 'user'){
-      const user = await prisma.users.findUnique({
+    let account ;
+    if(decoded.role === 'user'){
+      account= await prisma.users.findUnique({
         where: {
           id: decoded.id,
         },
       });
-    
-    if(!user){
-      return next(new AuthenticationError('User not found ! UnAuthorized'));
+    }
+    else if(decoded.role === 'seller'){
+      account = await prisma.sellers.findUnique({
+        where: {
+          id: decoded.id,
+        },
+        include: {
+          shops: true,
+        },
+      });
+    }
+
+    if(!account){
+      return next(new AuthenticationError('Account not found ! UnAuthorized User/seller'));
     }
 
     const newAccessToken = jwt.sign(
@@ -278,7 +293,11 @@ export const refreshToken= async (
       }
     );
 
-    setCookies(res, 'accessToken', newAccessToken);
+    if(decoded.role === 'user'){
+      setCookies(res, 'accessToken', newAccessToken);
+    }else if(decoded.role === 'seller'){
+      setCookies(res, 'SellerAccessToken', newAccessToken);
+    }
 
     res.status(200).json({
       status: 'success',
