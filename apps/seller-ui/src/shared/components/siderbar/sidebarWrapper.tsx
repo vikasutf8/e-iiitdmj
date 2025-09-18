@@ -4,8 +4,9 @@ import useSidebar from '../../../hoooks/useSidebar'
 import React, { useEffect } from 'react'
 import useSeller from '../../../hoooks/useSeller';
 import Box from '../box';
-import SideBarStyle from './sidebarStyle';
-import { Sidebar } from 'lucide-react';
+import { SideBarStyle } from './sidebarStyle';
+import Link from 'next/link';
+
 
 
 const SidebarWrapper = () => {
@@ -39,7 +40,15 @@ const SidebarWrapper = () => {
     className='sidebar-wrapper'
     >
       <SideBarStyle.Header>
-        
+        <Box>
+           <Link href="/" className='flex  justify-center text-center gap-2 '>
+           {/* <Logo/> Logog */}
+           <Box>
+              <h3 className='text-xl font-medium text-[#ecedee]'>{seller?.shop?.name}</h3>
+           </Box>
+
+           </Link>
+        </Box>
       </SideBarStyle.Header>
 
     </Box>

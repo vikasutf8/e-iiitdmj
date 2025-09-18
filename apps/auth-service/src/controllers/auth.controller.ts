@@ -141,6 +141,12 @@ export const loginUser = async (
     if (!isPasswordValid) {
       return next(new AuthenticationError('Invalid password'));
     }
+
+    // removing seller accessToken and refreshToken
+    res.clearCookie('SellerAccessToken'); 
+    res.clearCookie('SellerRefreshToken');
+
+
     //generate access and refresh token
     const accessToken = jwt.sign(
       { id: user.id, role: 'user' },
@@ -243,7 +249,7 @@ export const resetUserPassword = async (
 };
 //refresh token user | Seller
 export const refreshToken= async (
-  req: Request,
+  req: any,
   res: Response,
   next: NextFunction
 ) => {
@@ -298,6 +304,8 @@ export const refreshToken= async (
     }else if(decoded.role === 'seller'){
       setCookies(res, 'SellerAccessToken', newAccessToken);
     }
+
+    req.role = decoded.role;
 
     res.status(200).json({
       status: 'success',
@@ -560,6 +568,11 @@ export const loginSeller = async (
     if(!isPasswordValid){
       return next(new AuthenticationError('Invalid password'));
     }
+
+    // removing user accessToken and refreshToken
+    res.clearCookie('accessToken');
+    res.clearCookie('refreshToken');
+
 
   //  accessToken && refreshToken
     const accessToken = jwt.sign(

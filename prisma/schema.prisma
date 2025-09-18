@@ -80,5 +80,5 @@ model sellers {
   createdAt    DateTime @default(now())
   updatedAt    DateTime @updatedAt
   shops        shops?
-  shopId       String?  @db.ObjectId
+  shopId       String?  @db.ObjectId //remove this on testing 
 }
