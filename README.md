@@ -141,3 +141,41 @@ RESPONSE:
   password: string;
 
 ```
+
+### Seller-UI
+POST: http://localhost:3000/api/v1/logged-in-seller
+```
+response:
+{
+    "status": "success",
+    "success": true,
+    "seller": {
+        "id": "68cc39d073b1812806ec1e89",
+        "name": "Vikas",
+        "email": "21bcs241@iiitdmj.ac.in",
+        "password": "$2b$10$p4tsYy0YCoCiG0COAhVT5elXTlc6vw9JM6XKLW9y9H6w/CfSyjbaK",
+        "phone_number": "9983340124",
+        "country": "AO",
+        "stripeId": null,
+        "createdAt": "2025-09-18T16:56:48.428Z",
+        "updatedAt": "2025-09-18T16:56:48.428Z",
+        "shopId": null,
+        "shops": {
+            "id": "68cc3a1973b1812806ec1e8a",
+            "name": "shops1",
+            "bio": "this is working of shops",
+            "category": "furniture",
+            "coverBanner": null,
+            "address": "sector 45, Gurugram",
+            "opening_hours": "Mon-Thr 4:45 PM",
+            "website": "http://localhost.com",
+            "socialLinks": [],
+            "ratings": 0,
+            "sellerId": "68cc39d073b1812806ec1e89",
+            "createdAt": "2025-09-18T16:58:01.259Z",
+            "updatedAt": "2025-09-18T16:58:01.259Z"
+        }
+    }
+}
+
+```

@@ -1,4 +1,4 @@
-import { AuthenticationError } from "@packages/error-handler";
+import { AuthenticationError } from "../error-handler";
 import { NextFunction, Response } from "express";
 
 

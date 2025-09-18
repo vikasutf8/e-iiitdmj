@@ -6,6 +6,7 @@ import useSeller from '../../../hoooks/useSeller';
 import Box from '../box';
 import { SideBarStyle } from './sidebarStyle';
 import Link from 'next/link';
+import SidebarItem from './sidebarItem';
 
 
 
@@ -45,11 +46,20 @@ const SidebarWrapper = () => {
            {/* <Logo/> Logog */}
            <Box>
               <h3 className='text-xl font-medium text-[#ecedee]'>{seller?.shop?.name}</h3>
+              <h5 className='text-[#969696] pl-2 font-medium text-xs whitespace-nowrap overflow-hidden text-ellipsis max-w-['>{seller?.shop?.address}</h5>
+
            </Box>
 
            </Link>
         </Box>
       </SideBarStyle.Header>
+
+      <div className='block my-3 h-full'>
+        <SideBarStyle.Body>
+          <SidebarItem title='Dashboard' icons={<i className="ri-home-3-line"></i>} isActive={activeSidebar === '/dashboard'} href='/dashboard' />
+          
+        </SideBarStyle.Body>
+      </div>
 
     </Box>
   )

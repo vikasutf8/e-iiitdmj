@@ -19,6 +19,7 @@ import bcrypt from 'bcryptjs';
 import jwt, { JsonWebTokenError } from 'jsonwebtoken';
 import { setCookies } from '../utils/cookies/setCookies';
 
+// console.log(process.env.STRIPE_SECRET_KEY,"STRIPE_SECRET_KEY");
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY! as string, {
   apiVersion: '2025-08-27.basil',
 });
@@ -481,6 +482,7 @@ export const createStripeConnectLink = async (
 )=>{
   try {
       const {sellerId} = req.body;
+      console.log(sellerId,"sellerId");
       if(!sellerId){
         return next(new ValidationError("Please provide valid sellerId"));
       }
@@ -490,6 +492,7 @@ export const createStripeConnectLink = async (
           id: sellerId,
         },
       });
+      console.log(seller,"seller");
 
       if(!seller){
         return next(new ValidationError("Seller not found"));
@@ -508,6 +511,8 @@ export const createStripeConnectLink = async (
           },
         },
       });
+
+      console.log(stripeAccount,"stripeAccount");
 
       await prisma.sellers.update({
         where: {
@@ -528,6 +533,8 @@ export const createStripeConnectLink = async (
         //   type: 'account_onboarding',
         //   refresh_url: `${process.env.NEXT_PUBLIC_SERVER_URI}/api/v1/stripe-account-link`,
       });
+
+      console.log(accountLink,"accountLink");
       
       res.status(200).json({
         status: 'success',

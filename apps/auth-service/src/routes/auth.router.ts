@@ -3,7 +3,7 @@
 import express ,{Router} from "express";
 import { createShop, createStripeConnectLink, forgotPassword, getSellerInfo, getUserInfo, loginSeller, loginUser, refreshToken, resetUserPassword, sellerRegistration, userRegistration, verifySeller, verifyUser, verifyUserForgotPassword } from "../controllers/auth.controller";
 import  {isAuthenticated}  from "../../../../packages/middleware/isAuthenticated";
-import { isSeller, isUser } from "@packages/middleware/authorizeRoles";
+import { isSeller, isUser } from "../../../../packages/middleware/authorizeRoles";
 
 const router:Router = express.Router();
 

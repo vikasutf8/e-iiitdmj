@@ -7,7 +7,7 @@ interface props {
     isActive: boolean
     href : string
 }
-const sidebarItem = ({icons, title, isActive, href} :props) => {
+const SidebarItem = ({icons, title, isActive, href} :props) => {
   return (
     <Link href={href} className='my-2 block'>
         <div className={`flex gap-2 w-full h-full items-center px-[13px] rounded-lg cursor-pointer transition justify-start ${isActive && "scale-[.98] bg-[#0f3158] fill-blue-200 hover: bg-[#0f3158d6]"}`}>
@@ -20,4 +20,4 @@ const sidebarItem = ({icons, title, isActive, href} :props) => {
   )
 }
 
-export default sidebarItem
+export default SidebarItem
