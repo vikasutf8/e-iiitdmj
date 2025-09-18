@@ -1,10 +1,10 @@
-import React from 'react'
+"use client"
 import styled from 'styled-components'
 // 8:13
 
 
-export const SidebarWrapper = styled.div<{ collapsed?: boolean }>`
-  background-color: var(--background); /* Update your CSS variable */
+export const SidebarWrapper = styled.div`
+  background-color: var(--background);
   transition: transform 0.2s ease;
   height: 100%;
   position: fixed;
@@ -13,18 +13,16 @@ export const SidebarWrapper = styled.div<{ collapsed?: boolean }>`
   flex-shrink: 0;
   z-index: 202;
   overflow-y: auto;
-  border-right: 1px solid var(--border); /* Update your CSS variable */
+  border-right: 1px solid var(--border); 
   display: flex;
   flex-direction: column;
   padding: var(--space-10) var(--space-6);
 
-  /* Hide scrollbar */
   ::-webkit-scrollbar {
     display: none;
   }
 
   @media (min-width: 768px) {
-    /* Update breakpoint as necessary */
     margin-left: 0;
     display: flex;
     position: static;
@@ -32,9 +30,8 @@ export const SidebarWrapper = styled.div<{ collapsed?: boolean }>`
     transform: translateX(0);
   }
 
-  /* Variants for collapsed */
   ${(props) =>
-    props.collapsed &&
+    (props as { collapsed?: boolean }).collapsed &&
     `
       display: inherit;
       margin-left: 0;
