@@ -91,7 +91,7 @@ const SidebarWrapper = () => {
                />
              ))}
            </SidebarMenu>
-
+{/* NOTE: routing will defined later */}
            <SidebarMenu title="Products">
              {[
                {
