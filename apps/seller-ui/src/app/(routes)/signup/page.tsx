@@ -2,15 +2,10 @@
 'use client'
 
 import React, { useRef, useState } from 'react'
-import {
-    QueryClient,
-    QueryClientProvider,
-    useMutation,
-    useQuery,
-} from '@tanstack/react-query'
+import {useMutation} from '@tanstack/react-query'
 
 import { useForm } from 'react-hook-form'
-import { useRouter } from 'next/navigation'
+
 import Link from 'next/link'
 
 
@@ -29,7 +24,7 @@ const SignUp = () => {
     const [timer, setTimer] = useState(60);
     const [otp, setOtp] = useState(["", "", "", ""]);
     const [sellerData, setSellerData] = useState<FormData | null>(null);
-    const [sellerId,setSellerId]= useState("")
+    const [sellerId, setSellerId] = useState("")
     const inputRef = useRef<(HTMLInputElement | null)[]>([]);
 
 
@@ -73,7 +68,7 @@ const SignUp = () => {
             return response.data;
         },
         onSuccess: (data) => {
-            console.log(data ,"this verifice data")
+            console.log(data, "this verifice data")
             setSellerId(data?.seller?.id);
             setActiveStep(2)
         },
@@ -115,7 +110,7 @@ const SignUp = () => {
     const connectPaypal = () => {
         console.log("paypal connect")
     }
-    const connectStripe = async() => {
+    const connectStripe = async () => {
         try {
             const response = await axios.post(`${process.env.NEXT_PUBLIC_SERVER_URI}/api/v1/create-stripe-link`, {
                 sellerId
@@ -278,9 +273,9 @@ const SignUp = () => {
                                     {
                                         signupMutation.isError &&
                                         signupMutation.error instanceof AxiosError &&
-                                       (
-                                         <p className='text-red-500 text-sm'>{signupMutation.error.response?.data?.message || signupMutation.error.message}</p>
-                                       )
+                                        (
+                                            <p className='text-red-500 text-sm'>{signupMutation.error.response?.data?.message || signupMutation.error.message}</p>
+                                        )
                                     }
 
                                     {serverError && <p className='text-red-500 text-sm'>{serverError}</p>}
@@ -342,7 +337,7 @@ const SignUp = () => {
                             )
                         }
                     </>
-                ) }
+                )}
                 {
                     activeStep === 2 && (
                         <CreateShop sellerId={sellerId} setActiveStep={setActiveStep} />
@@ -350,21 +345,21 @@ const SignUp = () => {
                 }
                 {
                     activeStep === 3 && (
-                       <div className='text-center'>
-                           <h3 className='text-2xl font-bold flex justify-center'>Withdraw Method</h3>
-                           <br />
-                           <div className='flex gap-4'>
-                               <button className='mt-4 w-1/2 text-xl cursor-pointer bg-[#0000008c] hover:bg-black active:bg-black text-white py-2 rounded-lg'
-                               onClick={connectPaypal}>
-                                   Connect Paypal
-                               </button>
-                               <button className='mt-4 w-1/2 text-xl cursor-pointer bg-[#0000008c] hover:bg-black active:bg-black text-white py-2 rounded-lg'
-                               onClick={connectStripe}
-                               >
-                                   Connect Stripe
-                               </button>
-                           </div>
-                       </div>
+                        <div className='text-center'>
+                            <h3 className='text-2xl font-bold flex justify-center'>Withdraw Method</h3>
+                            <br />
+                            <div className='flex gap-4'>
+                                <button className='mt-4 w-1/2 text-xl cursor-pointer bg-[#0000008c] hover:bg-black active:bg-black text-white py-2 rounded-lg'
+                                    onClick={connectPaypal}>
+                                    Connect Paypal
+                                </button>
+                                <button className='mt-4 w-1/2 text-xl cursor-pointer bg-[#0000008c] hover:bg-black active:bg-black text-white py-2 rounded-lg'
+                                    onClick={connectStripe}
+                                >
+                                    Connect Stripe
+                                </button>
+                            </div>
+                        </div>
                     )
                 }
             </div>
