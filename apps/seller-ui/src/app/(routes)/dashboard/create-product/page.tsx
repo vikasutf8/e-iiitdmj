@@ -6,6 +6,7 @@ import { ChevronRightIcon } from 'lucide-react'
 import React from 'react'
 import Input from '../../../../../../../packages/components/input'
 import { useForm } from 'react-hook-form'
+import { ColorSelector } from 'packages/components/color-selector'
 
 const page = () => {
   const { register, control, watch, setValue, handleSubmit, formState: { errors } } = useForm();
@@ -159,7 +160,12 @@ const page = () => {
 
               <div className='mt-2'>
                 {/* colorSelector */}
-                
+                <ColorSelector
+                  label='Color'
+                  control={control}
+                  errors={errors}
+                  
+                />
               </div>
 
             </div>
