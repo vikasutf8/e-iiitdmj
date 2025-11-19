@@ -129,8 +129,6 @@ const page = () => {
                 <Input label='Warranty' type='text' placeholder='1 year/No Warrenty' className='w-full' {...register('warranty', { required: "Warranty is required" })} />
                 {errors.warranty && <p className='text-red-500 text-xs'>{errors.warranty.message as string}</p>}
               </div>
-
-
               {/* product slug with validation */}
               <div className='mt-2'>
                 <Input label='Slug' type='text' placeholder='Slug' className='w-full' {...register('slug', {
@@ -158,8 +156,6 @@ const page = () => {
                 <Input label='Brand' type='text' placeholder='Apple' className='w-full' {...register('brand', { required: "Brand is required" })} />
                 {errors.brand && <p className='text-red-500 text-xs'>{errors.brand.message as string}</p>}
               </div>
-
-
               <div className='mt-2'>
                 {/* colorSelector */}
                 <ColorSelector
@@ -182,7 +178,26 @@ const page = () => {
                   errors={errors}/>
               </div>
 
+              <div className='mt-2'> 
+                {/* Cash on Delivery */}
+                <label htmlFor="" className='block text-gray-300 font-semibold mb-1'>Cash on Delivery</label>
+                <select {...register('cash_on_delivery', { required: "Cash on Delivery is required" })} 
+                  className='w-full outline-none border-gray-700 bg-transparent rounded-md border px-4 py-2 text-white'
+                  defaultValue="yes"
+                >
+                  <option className='bg-black text-white' value="yes">Yes</option>
+                  <option className='bg-black text-white' value="no">No</option>
+                </select>
+                {errors.cash_on_delivery && <p className='text-red-500 text-xs'>{errors.cash_on_delivery.message as string}</p>}
+              </div>
+
             </div>
+              
+            {/*  */}
+            <div className='w-1/2'>
+                <label htmlFor="" className='block text-gray-300 font-semibold mb-1'>Category *</label>
+            </div>
+
           </div>
         </div>
 
