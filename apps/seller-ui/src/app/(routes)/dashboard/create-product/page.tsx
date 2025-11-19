@@ -7,6 +7,7 @@ import React from 'react'
 import Input from '../../../../../../../packages/components/input'
 import { useForm } from 'react-hook-form'
 import { ColorSelector } from 'packages/components/color-selector'
+import CustomSpecification from 'packages/components/custom-specification'
 
 const page = () => {
   const { register, control, watch, setValue, handleSubmit, formState: { errors } } = useForm();
@@ -163,9 +164,14 @@ const page = () => {
                 <ColorSelector
                   label='Color'
                   control={control}
-                  errors={errors}
-                  
-                />
+                  errors={errors}/>
+              </div>
+
+              <div className='mt-2'> 
+                {/* custom specification */}
+                <CustomSpecification
+                  control={control}
+                  errors={errors}/>
               </div>
 
             </div>
