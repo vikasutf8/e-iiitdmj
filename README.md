@@ -1,6 +1,10 @@
 # EShop
 
+
 ## SERVICES
+```
+nx g @nx/express:app product-service --directory=apps/product-service --e2eTestRunner=none
+```
 ### 1. api-gateway
  - PORT: 8081
 The API Gateway acts as a single entry point for all client requests.  

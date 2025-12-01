@@ -54,6 +54,8 @@ app.get('/gateway-health', (req, res) => {
 
 // auth-service proxy
 app.use('/',porxy("http://localhost:6001"));
+app.use('/products',porxy("http://localhost:6002"));
+      
 // 
 
 const port = process.env.PORT || 8081;
