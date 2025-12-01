@@ -4,6 +4,7 @@
 import ImagePlaceHolder from '../../../../shared/components/image-placeholder'
 import { ChevronRightIcon } from 'lucide-react'
 import React from 'react'
+// eslint-disable-next-line @nx/enforce-module-boundaries
 import Input from '../../../../../../../packages/components/input'
 import { useForm } from 'react-hook-form'
 import { ColorSelector } from 'packages/components/color-selector'

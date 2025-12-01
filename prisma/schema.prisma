@@ -4,15 +4,23 @@
 // Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
 // Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
 
+// generator client {
+//   provider = "prisma-client-js"
+//   output   = "../generated/prisma"
+// }
+
+// datasource db {
+//   provider = "mongodb"
+// }
+
 generator client {
   provider = "prisma-client-js"
-  output   = "../generated/prisma"
 }
 
 datasource db {
   provider = "mongodb"
-  url      = env("DATABASE_URL")
 }
+
 
 model images {
   id      String    @id @default(auto()) @map("_id") @db.ObjectId
@@ -81,4 +89,12 @@ model sellers {
   updatedAt    DateTime @updatedAt
   shops        shops?
   shopId       String?  @db.ObjectId //remove this on testing 
+}
+
+// dummy data on initialize site config
+
+model site_config {
+  id        String   @id @default(auto()) @map("_id") @db.ObjectId
+  categories String[]
+  subCategories Json
 }

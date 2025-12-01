@@ -11,6 +11,7 @@ import rateLimit from 'express-rate-limit';
 import porxy from 'express-http-proxy';
 import morgan from 'morgan';
 import cookieParser from 'cookie-parser';
+import { initializeSiteConfig } from './libs/initializeSiteConfig';
 
 
 // 6.30
@@ -58,5 +59,12 @@ app.use('/',porxy("http://localhost:6001"));
 const port = process.env.PORT || 8081;
 const server = app.listen(port, () => {
   console.log(`Listening at http://localhost:${port}/api`);
+
+  try {
+    initializeSiteConfig();
+    console.log(`Loading site config...`);
+  } catch (error) {
+    console.error("Failed loading site config:", error);
+  }
 });
 server.on('error', console.error);

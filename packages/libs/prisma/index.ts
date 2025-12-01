@@ -1,18 +1,22 @@
-/* eslint-disable no-var */
-/* eslint-disable @typescript-eslint/no-namespace */
+import { PrismaClient } from '@prisma/client';
 
-// import { PrismaClient } from '../../../generated/prisma';
-import { PrismaClient } from '@prisma/client'; 
 declare global {
-    namespace globalThis{
-        var prisma:PrismaClient;
-    }
+  var prisma: PrismaClient | undefined;
 }
 
- const prisma = new PrismaClient();
+export const prisma =
+  global.prisma ??
+  new PrismaClient();
 
-    if (process.env.NODE_ENV !== 'production') global.prisma = prisma;
+if (process.env.NODE_ENV !== 'production') global.prisma = prisma;
 
+export default prisma;
 
+// import { PrismaClient } from '@prisma/client';
 
-    export default prisma;
+// export const prisma = new PrismaClient({
+//   datasourceUrl: process.env.DATABASE_URL,
+// });
+
+// export default prisma;
+
