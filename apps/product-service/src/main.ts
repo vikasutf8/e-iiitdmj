@@ -3,6 +3,7 @@ import cors from 'cors';
 // eslint-disable-next-line @nx/enforce-module-boundaries
 import { errorMiddleware } from "../../../packages/error-handler/error-middleware";
 import cookieParser from 'cookie-parser';
+import router from './routes/product.route';
 // import router from './routes/auth.router';
 // import  SwaggerUi from 'swagger-ui-express';
 // const swaggerDocument = require('./swagger-output.json');
@@ -37,7 +38,7 @@ app.get('/', (req, res) => {
 //   res.json(swaggerDocument);
 // })
 // // Routes
-// app.use("/api/v1/",router)
+app.use("/api/v1/",router)
 
 
 

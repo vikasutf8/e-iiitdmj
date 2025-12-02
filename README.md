@@ -1,5 +1,5 @@
 # EShop
-
+ <!-- npx nx reset cache -->
 
 ## SERVICES
 ```
