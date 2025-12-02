@@ -183,3 +183,9 @@ response:
 }
 
 ```
+
+### Product Service
+
+```js 
+curl -X POST http://localhost:6002/products/api/v1/get-categories
+```

@@ -10,6 +10,8 @@ import { useForm } from 'react-hook-form'
 import { ColorSelector } from 'packages/components/color-selector'
 import CustomSpecification from 'packages/components/custom-specification'
 import CustomProperties from 'packages/components/custom-property'
+import axiosInstance from 'apps/seller-ui/src/utils/axiosinstance'
+import { useQuery } from '@tanstack/react-query'
 
 const page = () => {
   const { register, control, watch, setValue, handleSubmit, formState: { errors } } = useForm();
@@ -18,6 +20,27 @@ const page = () => {
   const [image, setImage] = React.useState<(File | null)[]>([null]);
   const [isChanged, setIsChanged] = React.useState(false);
   const [loading, setLoading] = React.useState(false);
+
+  const {data,isLoading, isError} = useQuery({
+    queryKey: ['categories'],
+    queryFn: async() => {
+      try {
+        const response =await axiosInstance.get('products/api/v1/get-categories');
+        return response.data;
+      } catch (error) {
+        console.log(error);
+      }
+    },
+    staleTime: 1000 * 60 * 5,
+    retry: 2,
+  });
+
+  const categories = data?.categories || [];
+  const subCategories = data?.subCategories || {};
+console.log(categories,subCategories);
+  const selectedCategory = watch('category');
+  const regularPrice = watch('regular_price');
+
   const onSubmit = (data: any) => {
     console.log('submit', data)
   }
