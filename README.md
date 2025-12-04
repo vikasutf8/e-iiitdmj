@@ -190,7 +190,19 @@ response:
 curl -X POST http://localhost:6002/products/api/v1/get-categories
 ```
 
- - discount-codes
+ - Get discount-codes
  ```js
 curl -X POST http://localhost:6002/products/api/v1/get-discount-code
+```
+
+- Create discount-codes
+ ```js
+curl -X POST http://localhost:6002/products/api/v1/create-discount-code \
+  -H "Content-Type: application/json" \
+  -d '{
+    "public_name": "New discount code",
+    "discountType": "percentage",
+    "discountValue": 10,
+    "discountCode": "new-code"
+  }'
 ```
