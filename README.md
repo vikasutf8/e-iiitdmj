@@ -189,3 +189,8 @@ response:
 ```js 
 curl -X POST http://localhost:6002/products/api/v1/get-categories
 ```
+
+ - discount-codes
+ ```js
+curl -X POST http://localhost:6002/products/api/v1/get-discount-code
+```
