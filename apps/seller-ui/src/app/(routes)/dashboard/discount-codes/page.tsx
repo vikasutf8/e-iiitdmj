@@ -1,6 +1,7 @@
 "use client"
 
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
+import DeleteDiscountCodeModal from 'apps/seller-ui/src/shared/components/modals/delete-discount-code';
 import axiosInstance from 'apps/seller-ui/src/utils/axiosinstance';
 import { AxiosError } from 'axios';
 import { ChevronRightIcon, PlugIcon, TrashIcon, XIcon } from 'lucide-react'
@@ -12,6 +13,8 @@ import { Controller, useForm } from 'react-hook-form';
 const Page = () => {
 
   const [showModal, setShowModal] = React.useState(false);
+  const [showDeleteModal, setShowDeleteModal] = React.useState(false); 
+  const [selectDiscountCode, setSelectDiscountCode] = React.useState<any>(null);
   const queryClient = useQueryClient();
 
   const {
@@ -52,8 +55,22 @@ const Page = () => {
     },
   })
 
+  const deleteDiscountCodeMutation = useMutation({
+    // mutationKey: ['delete-discount-code'],
+    mutationFn: async (discountId: string) => {
+      await axiosInstance.delete(`products/api/v1/delete-discount-code/${discountId}`);
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['shop-discounts'] });
+      setShowDeleteModal(false);
+    },
+  })
+
   const handleDeleteClick = async (discountCode: any) => {
-    console.log(discountCode, "discountCode");
+    // console.log(discountCode, "discountCode")
+    // toast.error("You can only create one discount code");
+    setSelectDiscountCode(discountCode);
+    setShowDeleteModal(true);
   }
 
   const onSubmit = (data: FormData) => {
@@ -210,9 +227,9 @@ const Page = () => {
                   {errors.discountCode && <p className='text-red-500 text-xs'>{errors.discountCode.message as string}</p>}
                 </div>
 
-                <button 
-                disabled={createDiscountCodeMutation.isPending}
-                className='px-4 py-2 bg-blue-400 text-white rounded-lg font-semibold hover:bg-blue-500 transition w-full flex items-center justify-center gap-3'
+                <button
+                  disabled={createDiscountCodeMutation.isPending}
+                  className='px-4 py-2 bg-blue-400 text-white rounded-lg font-semibold hover:bg-blue-500 transition w-full flex items-center justify-center gap-3'
                   type='submit'
                 >
                   <PlugIcon size={18} />
@@ -223,13 +240,27 @@ const Page = () => {
                 {
                   createDiscountCodeMutation.isError && (
                     <p className='text-red-500 text-xs'>{(
-                      createDiscountCodeMutation.error as AxiosError<{message: string}>
+                      createDiscountCodeMutation.error as AxiosError<{ message: string }>
                     )?.response?.data?.message || "Failed to create discount code"}</p>
                   )
                 }
               </form>
             </div>
           </div>
+        )
+      }
+
+      {/* Delete Discount Code Modal */}
+
+      {
+        showDeleteModal && selectDiscountCode && (
+          <DeleteDiscountCodeModal
+            onClose={() => setShowDeleteModal(false)}
+            onConfirm={() => {
+            return deleteDiscountCodeMutation.mutate(selectDiscountCode?.id); //??? Check there
+            }}
+            discountCode={selectDiscountCode}
+          />
         )
       }
 
