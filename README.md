@@ -1,4 +1,4 @@
-# EShop
+# EShop monorepo 
  <!-- npx nx reset cache -->
 
 ## SERVICES
@@ -212,3 +212,8 @@ curl -X POST http://localhost:6002/products/api/v1/create-discount-code \
 curl -X DELETE http://localhost:6002/products/api/v1/delete-discount-code/${discountId} \
   -H "Content-Type: application/json"
 ```
+
+
+
+
+## authentication and authorisation on redis based stored caches vis stash
