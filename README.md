@@ -217,3 +217,8 @@ curl -X DELETE http://localhost:6002/products/api/v1/delete-discount-code/${disc
 
 
 ## authentication and authorisation on redis based stored caches vis stash
+
+
+## TODO
+1. mutli tnenat based x coorational key and idempotent key
+2. product and. its categorised with analysis or web scraper 
