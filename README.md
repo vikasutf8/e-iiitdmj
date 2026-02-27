@@ -221,4 +221,7 @@ curl -X DELETE http://localhost:6002/products/api/v1/delete-discount-code/${disc
 
 ## TODO
 1. mutli tnenat based x coorational key and idempotent key
-2. product and. its categorised with analysis or web scraper 
+2. product and. its categorised with analysis or web scraper
+3. Designed backend Apis of Product- ------------------before holi
+4. Designed apis of orders and Carts system ------------before holi
+5. Payment integration via strip VS design as separeted microservice of Payment that directly connect to bank and wallet [IMPORTANT]
